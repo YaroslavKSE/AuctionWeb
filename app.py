@@ -1,20 +1,6 @@
-from flask import Flask
-from flask_pymongo import PyMongo
-from dotenv import load_dotenv
-import os
+from app import create_app
 
-# Load environment variables from .env file
-load_dotenv()
-
-app = Flask(__name__)
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-mongo = PyMongo(app)
-
-
-@app.route('/')
-def home():
-    return "Hello, MongoDB!"
-
+app = create_app()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
