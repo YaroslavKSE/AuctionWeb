@@ -1,5 +1,10 @@
+# Python related ignores
 *.pyc
 __pycache__/
 .idea/
 venv/
 .env
+
+# React related ignores
+react-frontend/node_modules/
+react-frontend/dist/
