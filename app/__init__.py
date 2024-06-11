@@ -5,6 +5,11 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from .models import User
+from bson import ObjectId
+import logging
+
+# Enable logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,11 +39,14 @@ def create_app():
     # User loader callback for Flask-Login
     @login_manager.user_loader
     def load_user(user_id):
-        user = mongo.db.users.find_one({"_id": user_id})
-        if user:
-            print("User found", user)
-            return User(user)
-        print("User not found")
+        try:
+            user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+            if user:
+                logging.debug(f"User loaded: {user}")
+                return User(user)
+        except Exception as e:
+            logging.error(f"Error loading user: {e}")
+        logging.debug("User not found")
         return None
 
     from .auth import auth as auth_blueprint
