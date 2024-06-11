@@ -1,12 +1,12 @@
+import os
+import logging
 from flask import Flask
-from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from flask_cors import CORS
 from dotenv import load_dotenv
-import os
-from .models import User
 from bson import ObjectId
-import logging
+from .models.user import User
+from .db_queries import mongo
 
 # Enable logging
 logging.basicConfig(level=logging.DEBUG)
@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.DEBUG)
 # Load environment variables from .env file
 load_dotenv()
 
-mongo = PyMongo()
 login_manager = LoginManager()
 
 
@@ -49,10 +48,7 @@ def create_app():
         logging.debug("User not found")
         return None
 
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
-
-    from .routes import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='/api')
 
     return app

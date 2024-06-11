@@ -1,9 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from . import mongo
-from .models import User
+from ..db_queries.user_queries import find_user_by_email, insert_user
+from ..models.user import User
 
 auth = Blueprint('auth', __name__)
 
@@ -16,16 +15,16 @@ def register():
     name = data.get('name')
     surname = data.get('surname')
 
-    if mongo.db.users.find_one({"email": email}):
+    if find_user_by_email(email):
         return jsonify({"error": "User already exists"}), 400
 
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-    user_id = mongo.db.users.insert_one({
+    user_id = insert_user({
         "email": email,
         "password": hashed_password,
         "name": name,
         "surname": surname
-    }).inserted_id
+    })
 
     return jsonify({"message": "User created successfully", "user_id": str(user_id)}), 201
 
@@ -36,7 +35,7 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    user = mongo.db.users.find_one({"email": email})
+    user = find_user_by_email(email)
     if user and check_password_hash(user['password'], password):
         user_obj = User(user)
         login_user(user_obj)
