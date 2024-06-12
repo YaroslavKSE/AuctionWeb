@@ -18,5 +18,16 @@ def update_listing_bid(listing_id, bid_amount, bidder_id):
     )
 
 
+def update_listing_status(listing_id, status, winner_id):
+    mongo.db.listings.update_one(
+        {"_id": ObjectId(listing_id)},
+        {"$set": {"status": status, "winner_id": winner_id, "updated_at": datetime.now()}}
+    )
+
+
 def find_listing_by_id(listing_id):
     return mongo.db.listings.find_one({"_id": ObjectId(listing_id)})
+
+
+def find_listings_by_category(category):
+    return mongo.db.listings.find({"categories": category})

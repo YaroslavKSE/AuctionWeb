@@ -3,7 +3,10 @@ from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 
-from ..db_queries.listing_queries import insert_listing, find_all_listings
+from ..db_queries.listing_queries import (insert_listing, find_all_listings,
+                                          find_listing_by_id, update_listing_status)
+
+from ..db_queries.bid_queries import find_bids_by_listing_id
 
 listings = Blueprint('listings', __name__)
 
@@ -28,6 +31,7 @@ def create_listing():
         "images": images,
         "categories": categories,
         "owner_id": current_user.id,
+        "status": "active",
         "created_at": datetime.now(timezone.utc),
         "updated_at": datetime.now(timezone.utc)
     })
@@ -52,3 +56,27 @@ def get_listings():
             "updated_at": listing['updated_at']
         })
     return jsonify(result), 200
+
+
+@listings.route('/<listing_id>/close', methods=['POST'])
+@login_required
+def close_listing(listing_id):
+    listing = find_listing_by_id(listing_id)
+
+    if not listing:
+        return jsonify({"error": "Listing not found"}), 404
+
+    if listing['owner_id'] != current_user.id:
+        return jsonify({"error": "You are not the owner of this listing"}), 403
+
+    bids = find_bids_by_listing_id(listing_id)
+    highest_bid = max(bids, key=lambda x: x['amount'], default=None)
+
+    if highest_bid:
+        update_listing_status(listing_id, "closed", highest_bid['user_id'])
+        winner_id = highest_bid['user_id']
+    else:
+        update_listing_status(listing_id, "closed", None)
+        winner_id = None
+
+    return jsonify({"message": "Listing closed successfully", "winner_id": str(winner_id) if winner_id else None}), 200

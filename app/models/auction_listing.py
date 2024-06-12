@@ -12,5 +12,6 @@ class AuctionListing:
         self.owner_id = listing['owner_id']
         self.current_bid = listing.get('current_bid', None)
         self.current_bidder_id = listing.get('current_bidder_id', None)
+        self.status = listing.get('status', 'active')  # Default to active
         self.created_at = listing['created_at']
         self.updated_at = listing['updated_at']
