@@ -14,8 +14,8 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended'
-    // "plugin:storybook/recommended"
+    'plugin:prettier/recommended',
+    'plugin:storybook/recommended'
   ],
   plugins: ['react', 'react-hooks'],
   rules: {

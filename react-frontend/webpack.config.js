@@ -26,17 +26,10 @@ module.exports = (env) => {
           }
         },
         {
-          test: /\.css$/i,
+          test: /\.css$/,
           use: [
             'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                modules: {
-                  localIdentName: '[local]--[name]--[hash:base64:5]'
-                }
-              }
-            }
+            'css-loader' // for styles
           ]
         }
       ]

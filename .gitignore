@@ -8,3 +8,5 @@ venv/
 # React related ignores
 react-frontend/node_modules/
 react-frontend/dist/
+react-frontend/storybook-static
+*storybook.log
