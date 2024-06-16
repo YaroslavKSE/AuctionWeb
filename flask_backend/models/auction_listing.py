@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 class AuctionListing:
     def __init__(self, listing):
         self.id = str(listing['_id'])

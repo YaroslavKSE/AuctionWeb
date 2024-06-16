@@ -4,12 +4,13 @@
   "description": "- react@18",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --env dev",
-    "dev": "webpack serve --env dev",
+    "start": "webpack serve --config ./webpack.config.js --mode development",
+    "predeploy": "npm run build",
     "lint:fix": "eslint --fix",
     "lint": "eslint ./src/*",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build": "webpack --mode production"
   },
   "author": "",
   "license": "ISC",
