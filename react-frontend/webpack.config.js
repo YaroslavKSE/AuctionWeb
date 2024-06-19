@@ -3,20 +3,22 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = (env) => {
   return {
     mode: env.dev ? 'development' : 'production',
     entry: './src/index.js',
     output: {
-      filename: 'main.js',
-      path: path.resolve(__dirname, 'dist')
+      filename: env.dev ? '[name].js' : '[name].[contenthash].js',
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: '/'
     },
     devtool: env.dev ? 'eval-source-map' : 'source-map',
     module: {
       rules: [
         {
-          test: /.(js|jsx)$/,
+          test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -27,20 +29,40 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: [
-            'style-loader',
-            'css-loader' // for styles
-          ]
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif)$/,
+          type: 'asset/resource'
         }
       ]
     },
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      },
+      runtimeChunk: 'single'
+    },
     plugins: [
+      new CleanWebpackPlugin(),
       new ESLintPlugin({
         exclude: ['node_modules', 'dist'],
         context: path.resolve(__dirname, 'src')
       }),
       new HtmlWebpackPlugin({
-        template: 'public/index.html'
+        template: 'public/index.html',
+        minify: !env.dev && {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true,
+          removeEmptyAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          keepClosingSlash: true,
+          minifyJS: true,
+          minifyCSS: true,
+          minifyURLs: true
+        }
       })
     ],
     devServer: {
@@ -48,11 +70,10 @@ module.exports = (env) => {
         directory: path.join(__dirname, 'dist')
       },
       allowedHosts: 'all',
-      compress: false,
+      compress: true,
       port: 3000,
-      historyApiFallback: {
-        index: 'index.html'
-      }
+      historyApiFallback: true,
+      hot: true
     }
   }
 }
