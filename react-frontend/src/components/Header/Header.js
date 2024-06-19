@@ -1,17 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Header.css'
+import Logo from './Logo/Logo'
+import MenuIcon from './MenuIcon/MenuIcon'
+import Dropdown from './Dropdown/Dropdown'
+import Nav from '../Navigation/Nav'
 
 const Header = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen)
+  }
+
   return (
     <header className="header">
-      <div className="logo" onClick={() => window.location.reload()}>
-        Logo here
+      <div className="header__top">
+        <Logo />
+        <MenuIcon onClick={handleDropdownToggle} />
       </div>
-      <div className="menu-icon" onClick={() => alert('Dropdown for managing user account')}>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+      {isDropdownOpen && <Dropdown />}
+      <Nav />
     </header>
   )
 }

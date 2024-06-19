@@ -1,7 +1,7 @@
 /** @type { import('@storybook/react').Preview } */
-import '../src/components/Login/Login.css'
-import '../src/components/Register/Register.css'
-import '../src/components/Listings/Listings.css'
+// import '../src/components/Login/Login.css'
+// import '../src/components/Register/Register.css'
+// import '../src/components/Listings/Listings.css'
 
 const preview = {
   parameters: {

@@ -7,7 +7,30 @@ const config = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@chromatic-com/storybook',
-    '@storybook/addon-interactions'
+    '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-styling-webpack',
+      options: {
+        rules: [
+          // Replaces existing CSS rules with given rule
+          {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  esModule: false,
+                  modules: {
+                    localIdentName: '[local]--[name]--[hash:base64:5]'
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
   ],
   framework: {
     name: '@storybook/react-webpack5',
