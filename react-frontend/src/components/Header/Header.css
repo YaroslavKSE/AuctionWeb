@@ -1,22 +1,28 @@
-/* Header.css */
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #f8f8f8;
-  padding: 10px;
+  padding: 10px 0;
   border-bottom: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header__top {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  max-width: 1200px;
   align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: relative;
 }
 
-.header__logo img {
-  cursor: pointer;
+.header__logo {
+  display: flex;
+  justify-content: center;
   width: 100px;
 }
 
@@ -27,6 +33,8 @@
   width: 24px;
   height: 18px;
   cursor: pointer;
+  position: absolute;
+  right: 20px;
 }
 
 .menu-icon__line {
@@ -35,15 +43,16 @@
 }
 
 .header__dropdown {
+  position: absolute;
+  top: 50px; /* Position relative to the menu icon */
+  right: 20px; /* Position relative to the menu icon */
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50px;
-  right: 10px;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   animation: dropdownAnimation 0.3s ease;
+  z-index: 1000; /* Ensure the dropdown is above other elements */
 }
 
 .header__dropdown a {
@@ -54,17 +63,22 @@
 
 .header__nav {
   display: flex;
+  justify-content: space-between; /* Distribute the nav links */
+  width: 100%;
+  max-width: 1200px;
   margin-top: 20px;
 }
 
 .header__nav-link {
+  flex: 1;
   margin: 0 10px;
-  padding: 10px 20px;
+  padding: 15px 30px; /* Increase button size */
   text-decoration: none;
   color: #333;
   border: 1px solid #ddd;
   border-radius: 4px;
   transition: background-color 0.3s;
+  text-align: center;
 }
 
 .header__nav-link:hover {

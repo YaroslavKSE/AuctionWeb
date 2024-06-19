@@ -17,7 +17,7 @@ const LoginForm = () => {
     e.preventDefault()
     try {
       await login(email, password)
-      navigate('/listings')
+      navigate('/active-listings')
     } catch (err) {
       setError(err.message)
     }

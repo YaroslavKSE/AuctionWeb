@@ -1,6 +1,7 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import './NavLink.css'
+import PropTypes from 'prop-types'
 
 const NavLink = ({ href, label }) => {
   const location = useLocation()
@@ -13,4 +14,8 @@ const NavLink = ({ href, label }) => {
   )
 }
 
+NavLink.propTypes = {
+  href: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
+}
 export default NavLink

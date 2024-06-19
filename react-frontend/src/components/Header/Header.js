@@ -17,8 +17,8 @@ const Header = () => {
       <div className="header__top">
         <Logo />
         <MenuIcon onClick={handleDropdownToggle} />
+        {isDropdownOpen && <Dropdown className="header__dropdown" />}
       </div>
-      {isDropdownOpen && <Dropdown />}
       <Nav />
     </header>
   )

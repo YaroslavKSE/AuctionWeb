@@ -2,17 +2,17 @@ import React from 'react'
 import Listing from './Listing'
 
 export default {
-  title: 'Components/Listing',
-  component: Listing,
-  tags: ['autodocs']
+  title: 'Listing',
+  component: Listing
 }
 
-export const Default = () => (
-  <Listing
-    image="https://via.placeholder.com/150"
-    title="Sample Listing"
-    price={100}
-    createdAt="2023-06-15T00:00:00Z"
-    seller="seller123"
-  />
-)
+const Template = (args) => <Listing {...args} />
+
+export const Default = Template.bind({})
+Default.args = {
+  images: ['image1.jpg', 'image2.jpg'],
+  name: 'Sample Listing',
+  price: '$100',
+  createdAt: '2024-06-01',
+  seller: 'SellerName'
+}

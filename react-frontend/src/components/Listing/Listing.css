@@ -1,31 +1,39 @@
 .listing {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 10px;
 }
 
-.listing-image {
-    width: 30%;
-    height: auto;
+.listing__image-container {
+  width: 100%;
+  cursor: pointer;
 }
 
-.listing-info {
-    width: 50%;
+.listing__image {
+  width: 100%;
+  height: auto;
 }
 
-.seller-info {
-    display: flex;
-    align-items: center;
+.listing__details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
 }
 
-.seller-info button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
+.listing__name,
+.listing__price,
+.listing__created-at {
+  margin: 5px 0;
+}
+
+.listing__seller {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: 1px solid #333;
+  border-radius: 50%;
 }

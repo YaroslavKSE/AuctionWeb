@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import './Listing.css'
 
-const Listing = ({ image, title, price, createdAt, seller }) => {
+const Listing = ({ images, name, price, createdAt, seller }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((currentImageIndex + 1) % images.length)
+  }
+
   return (
     <div className="listing">
-      <img src={image} alt="Listing" className="listing-image" />
-      <div className="listing-info">
-        <h3>{title}</h3>
-        <p>Price: {price}</p>
-        <p>Created at: {createdAt}</p>
+      <div className="listing__image-container" onClick={handleNextImage}>
+        <img src={images[currentImageIndex]} alt={name} className="listing__image" />
       </div>
-      <div className="seller-info">
-        <button>{seller}</button>
+      <div className="listing__details">
+        <div className="listing__name">{name}</div>
+        <div className="listing__price">{price}</div>
+        <div className="listing__created-at">{createdAt}</div>
       </div>
+      <div className="listing__seller">{seller}</div>
     </div>
   )
 }
 
 Listing.propTypes = {
-  image: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
+  name: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   seller: PropTypes.string.isRequired
 }
