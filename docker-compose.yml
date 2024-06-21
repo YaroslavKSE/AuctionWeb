@@ -1,20 +1,49 @@
-version: '3.1'
+version: '3.8'
 
 services:
-  app:
-    build: .
-    container_name: flask_app
+  backend:
+    build:
+      context: /flask_backend
+      dockerfile: Dockerfile-backend
+    container_name: auction_backend
+    env_file:
+      - ./.env
     ports:
       - "5000:5000"
-    links:
+    depends_on:
       - mongo
-    environment:
-      - MONGO_URI=${MONGO_URI}
     volumes:
-      - .:/app
+      - ./flask_backend:/app
+    networks:
+      - auction_network
+
+  frontend:
+    build:
+      context: /react-frontend
+      dockerfile: Dockerfile-frontend
+    container_name: react_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
   mongo:
     image: mongodb/mongodb-community-server:latest
-    container_name: mongo_db
+    container_name: auction_mongo
     ports:
       - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - auction_network
+
+networks:
+  auction_network:
+
+volumes:
+  mongo_data:
+
+
+
+
+
