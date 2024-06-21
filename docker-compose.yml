@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile-backend
     container_name: auction_backend
     env_file:
-      - ./.env
+      - .env
     ports:
       - "5000:5000"
     depends_on:
@@ -42,8 +42,3 @@ networks:
 
 volumes:
   mongo_data:
-
-
-
-
-

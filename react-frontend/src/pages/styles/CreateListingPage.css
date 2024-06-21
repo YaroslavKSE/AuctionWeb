@@ -1,0 +1,14 @@
+.create-listing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.create-listing-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  gap: 20px;
+}

@@ -1,12 +1,13 @@
 import os
 import logging
-from flask import Flask
+from flask import Flask, make_response, request
 from flask_login import LoginManager
 from flask_cors import CORS
 from dotenv import load_dotenv
 from bson import ObjectId
 from .models.user import User
 from .db_queries import mongo
+from .api.images import images
 
 # Enable logging
 logging.basicConfig(level=logging.DEBUG)
@@ -30,10 +31,23 @@ def create_app():
 
     mongo.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'api.auth.login'
 
     # Enable CORS with credentials
-    CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+
+    # Handle OPTIONS requests globally
+    @app.before_request
+    def handle_options_request():
+        if request.method == 'OPTIONS':
+            response = make_response('', 200)
+            response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+            response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+            response.headers.add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, "
+                                                                 "Authorization")
+            response.headers.add("Access-Control-Allow-Credentials", "true")
+
+            return response
 
     # User loader callback for Flask-Login
     @login_manager.user_loader

@@ -1,16 +1,13 @@
-.text-input-container {
+.textarea-input {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
 }
 
-.text-input-label {
+.textarea-input label {
   margin-bottom: 5px;
-  font-weight: bold;
 }
 
-.text-input {
-  width: 100%;
+.textarea-input textarea {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;

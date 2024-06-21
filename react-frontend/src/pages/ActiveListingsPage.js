@@ -28,10 +28,11 @@ const ActiveListingsPage = () => {
           <Listing
             key={listing.id}
             images={listing.images}
-            name={listing.name}
-            price={listing.price}
-            createdAt={listing.createdAt}
-            seller={listing.seller}
+            title={listing.title}
+            description={listing.description}
+            startingBid={listing.starting_bid}
+            createdAt={listing.created_at}
+            seller={listing.owner_id}
           />
         ))}
       </div>
