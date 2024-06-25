@@ -1,29 +1,24 @@
 .nav {
   display: flex;
-  justify-content: space-between; /* Distribute the nav links */
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  max-width: 1200px;
-  margin-top: 20px;
-  padding: 0 5%; /* Add padding to create space on the left and right */
+  height: 10vh; /* Adjust as needed to ensure it takes 10% of the screen height */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.nav a {
-  flex: 0 0 24%; /* Set each nav link to take 24% of the width */
-  margin: 0 2%; /* Add 2% margin on the left and right to create space between links */
-  padding: 10px 0; /* Adjust padding for a smaller button size */
+.nav-link {
+  flex: 1;
+  text-align: center;
+  padding: 15px 0;
   text-decoration: none;
   color: #333;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 0 2.5%;
   transition: background-color 0.3s;
-  text-align: center;
 }
 
-.nav a:hover {
-  background-color: #eee;
-}
 
-.nav a.active {
+.nav-link.active {
   font-weight: bold;
   border-color: #333;
 }

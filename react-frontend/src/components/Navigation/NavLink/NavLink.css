@@ -1,10 +1,12 @@
 .nav-link {
-  margin: 0 10px;
-  padding: 10px 20px;
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
   text-decoration: none;
   color: #333;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin: 0 2.5%; /* This ensures the 25% space distribution */
   transition: background-color 0.3s;
 }
 

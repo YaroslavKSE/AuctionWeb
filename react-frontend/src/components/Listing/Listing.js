@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import './Listing.css'
 
-const Listing = ({ images, title, description, startingBid, createdAt, seller }) => {
+const Listing = ({ images, title, startingBid, createdAt, seller }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const handleNextImage = () => {
@@ -16,9 +16,8 @@ const Listing = ({ images, title, description, startingBid, createdAt, seller })
       </div>
       <div className="listing__details">
         <div className="listing__title">{title}</div>
-        <div className="listing__description">{description}</div>
         <div className="listing__price">{startingBid}</div>
-        <div className="listing__created-at">{createdAt}</div>
+        <div className="listing__created-at">{new Date(createdAt).toLocaleString()}</div>
       </div>
       <div className="listing__seller">{seller}</div>
     </div>

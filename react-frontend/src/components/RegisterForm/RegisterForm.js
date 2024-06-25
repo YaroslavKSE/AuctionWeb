@@ -11,6 +11,8 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [name, setName] = useState('')
+  const [surname, setSurname] = useState('')
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
@@ -22,7 +24,7 @@ const RegisterForm = () => {
     }
 
     try {
-      await register(email, password)
+      await register(email, password, name, surname)
       navigate('/login')
     } catch (err) {
       setError(err.message)
@@ -32,6 +34,18 @@ const RegisterForm = () => {
   return (
     <form className="register-form" onSubmit={handleSubmit}>
       {error && <Error message={error} />}
+      <TextInput
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextInput
+        type="text"
+        placeholder="Surname"
+        value={surname}
+        onChange={(e) => setSurname(e.target.value)}
+      />
       <TextInput
         type="email"
         placeholder="Email"

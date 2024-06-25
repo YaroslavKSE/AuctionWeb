@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './styles/ActiveListingsPage.css'
-import Header from '../components/Header/Header'
+import Layout from '../components/Layout/Layout'
 import Listing from '../components/Listing/Listing'
 import { getListings } from '../api'
 
@@ -21,22 +21,23 @@ const ActiveListingsPage = () => {
   }, [])
 
   return (
-    <div className="active-listings-page">
-      <Header />
-      <div className="listings-container">
-        {listings.map((listing) => (
-          <Listing
-            key={listing.id}
-            images={listing.images}
-            title={listing.title}
-            description={listing.description}
-            startingBid={listing.starting_bid}
-            createdAt={listing.created_at}
-            seller={listing.owner_id}
-          />
-        ))}
+    <Layout>
+      <div className="active-listings-page">
+        <div className="listings-container">
+          {listings.map((listing) => (
+            <Listing
+              key={listing.id}
+              images={listing.images}
+              title={listing.title}
+              description={listing.description}
+              startingBid={listing.starting_bid}
+              createdAt={listing.created_at}
+              seller={'Seller Icon'}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 

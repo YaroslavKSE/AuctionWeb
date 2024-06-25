@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Header from '../components/Header/Header'
+import Layout from '../components/Layout/Layout'
 import TextInput from '../components/TextInput/TextInput'
 import SelectInput from '../components/SelectInput/SelectInput'
 import ImageInput from '../components/ImageInput/ImageInput'
@@ -56,54 +56,60 @@ const CreateListingPage = () => {
   }
 
   return (
-    <div className="create-listing-page">
-      <Header />
-      <form className="create-listing-form" onSubmit={handleSubmit}>
-        <TextInput
-          label="Title"
-          type="text"
-          placeholder="Enter the title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <SelectInput
-          label="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-        <ImageInput label="Add Images Here" images={images} setImages={setImages} />
-        <TextAreaInput
-          label="Add Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <NumberInput
-          label="Set the Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <Button type="submit">Create Listing</Button>
-      </form>
-      {isPopupOpen && (
-        <Popup
-          title="Confirm Listing"
-          message="Are you sure you want to create this listing?"
-          onConfirm={handleConfirm}
-          onClose={handleClose}
-        />
-      )}
-      {isSuccess && (
-        <Popup
-          title="Success"
-          message="Your listing has been created!"
-          onConfirm={handleClose}
-          onClose={handleClose}
-        />
-      )}
-      {errorMessage && (
-        <Popup title="Error" message={errorMessage} onConfirm={handleClose} onClose={handleClose} />
-      )}
-    </div>
+    <Layout>
+      <div className="create-listing-page">
+        <form className="create-listing-form" onSubmit={handleSubmit}>
+          <TextInput
+            label="Title"
+            type="text"
+            placeholder="Enter the title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <SelectInput
+            label="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+          <ImageInput label="Add Images Here" images={images} setImages={setImages} />
+          <TextAreaInput
+            label="Add Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <NumberInput
+            label="Set the Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <Button type="submit">Create Listing</Button>
+        </form>
+        {isPopupOpen && (
+          <Popup
+            title="Confirm Listing"
+            message="Are you sure you want to create this listing?"
+            onConfirm={handleConfirm}
+            onClose={handleClose}
+          />
+        )}
+        {isSuccess && (
+          <Popup
+            title="Success"
+            message="Your listing has been created!"
+            onConfirm={handleClose}
+            onClose={handleClose}
+          />
+        )}
+        {errorMessage && (
+          <Popup
+            title="Error"
+            message={errorMessage}
+            onConfirm={handleClose}
+            onClose={handleClose}
+          />
+        )}
+      </div>
+    </Layout>
   )
 }
 

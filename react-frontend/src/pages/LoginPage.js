@@ -10,7 +10,7 @@ const LoginPage = () => {
       <h1>Login</h1>
       <LoginForm />
       <div className="register-link">
-        Not a member yet? <a href="/register">Register</a>
+        Not a member yet? <a href="/signup">Register</a>
       </div>
     </div>
   )
