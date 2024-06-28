@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import './styles/ActiveListingsPage.css'
-import Layout from '../components/Layout/Layout'
 import Listing from '../components/Listing/Listing'
 import { getListings } from '../api'
+import { useNavigate } from 'react-router-dom'
+import Layout from '../components/Layout/Layout'
 
 const ActiveListingsPage = () => {
   const [listings, setListings] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -30,9 +32,10 @@ const ActiveListingsPage = () => {
               images={listing.images}
               title={listing.title}
               description={listing.description}
-              startingBid={listing.starting_bid}
               createdAt={listing.created_at}
+              price={listing.current_bid || listing.starting_bid + ' USD'}
               seller={'Seller Icon'}
+              onClick={() => navigate(`/listing/${listing.id}`)}
             />
           ))}
         </div>

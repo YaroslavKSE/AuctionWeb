@@ -51,3 +51,23 @@ export const createListing = async (listingData) => {
     throw error.response.data
   }
 }
+
+export const getListingById = async (listingId) => {
+  const response = await axios.get(`${API_BASE_URL}/listings/${listingId}`)
+  return response.data
+}
+
+export const getBidsByListingId = async (listingId) => {
+  const response = await axios.get(`${API_BASE_URL}/bids/${listingId}`)
+  return response.data
+}
+
+export const placeBid = async (listingId, amount) => {
+  const response = await axios.post(`${API_BASE_URL}/bids/${listingId}/place`, { amount })
+  return response.data
+}
+
+export const addToWatchlist = async (listingId) => {
+  const response = await axios.post(`${API_BASE_URL}/watchlist/add`, { listing_id: listingId })
+  return response.data
+}
