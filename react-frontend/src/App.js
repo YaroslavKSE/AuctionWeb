@@ -1,48 +1,26 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import RegisterPage from './pages/RegisterPage'
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
+import ActiveListingsPage from './pages/ActiveListingsPage'
+import CreateListingPage from './pages/CreateListingPage'
 import LoginPage from './pages/LoginPage'
-import ListingsPage from './pages/ListingsPage'
-import Layout from './components/Layout/Layout'
+import RegisterPage from './pages/RegisterPage'
+import AuthProvider from '../context/AuthContext'
+import ListingPage from './pages/ListingPage'
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <LoginPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <Layout>
-              <RegisterPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Layout>
-              <LoginPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/listings"
-          element={
-            <Layout>
-              <ListingsPage />
-            </Layout>
-          }
-        />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/active-listings" />} />
+          <Route path="/active-listings" element={<ActiveListingsPage />} />
+          <Route path="/create-listing" element={<CreateListingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<RegisterPage />} />
+          <Route path="/listing/:listingId" element={<ListingPage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 

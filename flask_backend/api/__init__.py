@@ -19,3 +19,6 @@ api.register_blueprint(categories_blueprint, url_prefix='/categories')
 
 from .main import main as main_blueprint
 api.register_blueprint(main_blueprint, url_prefix='/main')
+
+from .images import images as images_blueprint
+api.register_blueprint(images_blueprint, url_prefix='/images')

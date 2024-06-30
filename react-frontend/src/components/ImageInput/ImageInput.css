@@ -1,0 +1,29 @@
+.image-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-input label {
+  margin-bottom: 5px;
+}
+
+.image-input input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

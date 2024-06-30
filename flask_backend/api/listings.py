@@ -58,6 +58,28 @@ def get_listings():
     return jsonify(result), 200
 
 
+@listings.route('/<listing_id>', methods=['GET'])
+def get_listing_by_id(listing_id):
+    listing = find_listing_by_id(listing_id)
+    if not listing:
+        return jsonify({"error": "Listing not found"}), 404
+
+    result = {
+        "id": str(listing['_id']),
+        "title": listing['title'],
+        "description": listing['description'],
+        "starting_bid": listing['starting_bid'],
+        "images": listing.get('images', []),
+        "categories": listing.get('categories', []),
+        "owner_id": listing['owner_id'],
+        "created_at": listing['created_at'],
+        "updated_at": listing['updated_at'],
+        "current_bid": listing.get('current_bid'),
+        "current_bidder_id": listing.get('current_bidder_id')
+    }
+    return jsonify(result), 200
+
+
 @listings.route('/<listing_id>/close', methods=['POST'])
 @login_required
 def close_listing(listing_id):
