@@ -6,7 +6,7 @@ import LoginForm from '../components/LoginForm/LoginForm'
 const LoginPage = () => {
   return (
     <div className="login-page">
-      <Logo />
+      <Logo className="logo--small" />
       <h1>Login</h1>
       <LoginForm />
       <div className="register-link">

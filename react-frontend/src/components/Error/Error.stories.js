@@ -2,8 +2,13 @@ import React from 'react'
 import Error from './Error'
 
 export default {
-  title: 'Error',
+  title: 'Components/Error',
   component: Error
 }
 
-export const Default = () => <Error message="This is an error message" />
+const Template = (args) => <Error {...args} />
+
+export const Default = Template.bind({})
+Default.args = {
+  message: 'This is an error message.'
+}

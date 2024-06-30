@@ -2,8 +2,13 @@ import React from 'react'
 import MenuIcon from './MenuIcon'
 
 export default {
-  title: 'MenuIcon',
+  title: 'Components/MenuIcon',
   component: MenuIcon
 }
 
-export const Default = () => <MenuIcon />
+const Template = (args) => <MenuIcon {...args} />
+
+export const Default = Template.bind({})
+Default.args = {
+  onClick: () => alert('Menu icon clicked')
+}

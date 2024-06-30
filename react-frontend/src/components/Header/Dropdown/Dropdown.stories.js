@@ -2,8 +2,11 @@ import React from 'react'
 import Dropdown from './Dropdown'
 
 export default {
-  title: 'Dropdown',
+  title: 'Components/Dropdown',
   component: Dropdown
 }
 
-export const Default = () => <Dropdown />
+const Template = (args) => <Dropdown {...args} />
+
+export const Default = Template.bind({})
+Default.args = {}

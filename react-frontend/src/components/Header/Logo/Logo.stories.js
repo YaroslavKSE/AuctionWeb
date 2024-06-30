@@ -2,8 +2,11 @@ import React from 'react'
 import Logo from './Logo'
 
 export default {
-  title: 'Logo',
+  title: 'Components/Logo',
   component: Logo
 }
 
-export const Default = () => <Logo />
+const Template = (args) => <Logo {...args} />
+
+export const Default = Template.bind({})
+Default.args = {}

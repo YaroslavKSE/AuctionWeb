@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     build:
-      context: /flask_backend
+      context: ./flask_backend
       dockerfile: Dockerfile-backend
     container_name: auction_backend
     env_file:
@@ -19,7 +19,7 @@ services:
 
   frontend:
     build:
-      context: /react-frontend
+      context: ./react-frontend
       dockerfile: Dockerfile-frontend
     container_name: react_frontend
     ports:
