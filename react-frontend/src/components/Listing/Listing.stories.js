@@ -23,7 +23,7 @@ export const WithMultipleImages = Template.bind({})
 WithMultipleImages.args = {
   images: [
     'https://helios-i.mashable.com/imagery/articles/002v6VMLKku9Rbd83ArrdiL/hero-image.fill.size_1200x1200.v1694552559.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY0eTjkl-kxSzEaO9A7BruSv1Tkqmkg1el4domePwoLA-xR5Ri8BKsolYuK4v9bLrbBW8&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY0eTjkl-kxSzEaO9A7BruSv1Tkqmkg1el4domePwoLA-xR5Ri8BKsolYuK4v9bLrbBW8&usqp=CAU'
   ],
   title: 'Multiple Images Listing',
   price: '$199.99',
