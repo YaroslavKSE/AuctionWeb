@@ -38,7 +38,6 @@ export const login = async (email, password) => {
 export const getListings = async () => {
   try {
     const response = await axiosInstance.get('/listings')
-    console.log(API_BASE_URL)
     return response.data
   } catch (error) {
     throw error.response.data
