@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:5000/api'
+// Get the API base URL from the environment variables
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 // Configure axios to include credentials
 const axiosInstance = axios.create({
@@ -37,6 +38,7 @@ export const login = async (email, password) => {
 export const getListings = async () => {
   try {
     const response = await axiosInstance.get('/listings')
+    console.log(API_BASE_URL)
     return response.data
   } catch (error) {
     throw error.response.data

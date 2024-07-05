@@ -8,6 +8,8 @@ export const AuthContext = createContext({
   user: null
 })
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
@@ -15,7 +17,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/check', {
+        const response = await axios.get(`${API_BASE_URL}/auth/check`, {
           withCredentials: true
         })
         setIsAuthenticated(response.data.isAuthenticated)

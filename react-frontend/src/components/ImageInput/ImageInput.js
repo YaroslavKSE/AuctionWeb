@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import './ImageInput.css'
 import axios from 'axios'
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+
 const ImageInput = ({ label, images, setImages }) => {
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files)
@@ -12,8 +14,7 @@ const ImageInput = ({ label, images, setImages }) => {
       const formData = new FormData()
       formData.append('image', file)
       try {
-        const response = await axios.post('http://localhost:5000/api/images/upload', formData, {
-          // Note the double 'upload'
+        const response = await axios.post(`${API_BASE_URL}/images/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
