@@ -6,6 +6,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .button:hover {
