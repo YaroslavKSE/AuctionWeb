@@ -1,17 +1,11 @@
-/** @type { import('@storybook/react').Preview } */
-// import '../src/components/Login/Login.css'
-// import '../src/components/Register/Register.css'
-// import '../src/components/Listings/Listings.css'
+import { initialize, mswDecorator } from 'msw-storybook-addon'
+import { handlers } from '../mocks/handlers'
 
-const preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i
-      }
-    }
-  }
+// Initialize MSW
+initialize({ onUnhandledRequest: 'bypass' })
+
+export const parameters = {
+  msw: handlers,
 }
 
-export default preview
+export const decorators = [mswDecorator]

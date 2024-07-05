@@ -1,10 +1,10 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import Nav from './Nav'
+import LoginPage from '../LoginPage'
 
 export default {
-  title: 'Components/Nav',
-  component: Nav,
+  title: 'Pages/LoginPage',
+  component: LoginPage,
   decorators: [
     (Story) => (
       <MemoryRouter>
@@ -14,7 +14,7 @@ export default {
   ]
 }
 
-const Template = (args) => <Nav {...args} />
+const Template = (args) => <LoginPage {...args} />
 
 export const Default = Template.bind({})
 Default.args = {}

@@ -6,7 +6,7 @@ import RegisterForm from '../components/RegisterForm/RegisterForm'
 const RegisterPage = () => {
   return (
     <div className="register-page">
-      <Logo />
+      <Logo className="logo--small" />
       <h1>Register</h1>
       <RegisterForm />
       <div className="login-link">
