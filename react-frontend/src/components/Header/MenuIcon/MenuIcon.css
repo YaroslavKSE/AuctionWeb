@@ -5,7 +5,8 @@
   width: 24px;
   height: 18px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-left: auto; /* Align to the end */
+  position: relative; /* Ensure the dropdown is positioned relative to the menu icon */
 }
 
 .menu-icon__line {

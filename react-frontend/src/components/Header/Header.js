@@ -33,8 +33,10 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="header__logo" onClick={handleLogoClick}>
-        <Logo />
+      <div className="header__side">
+        <div className="header__logo" onClick={handleLogoClick}>
+          <Logo />
+        </div>
       </div>
       <div className="header__center">
         {isAuthenticated ? (
@@ -46,7 +48,7 @@ const Header = () => {
           </>
         )}
       </div>
-      <div className="header__menu">
+      <div className="header__side">
         <MenuIcon onClick={handleDropdownToggle} />
         {isDropdownOpen && <Dropdown className="header__dropdown" />}
       </div>
