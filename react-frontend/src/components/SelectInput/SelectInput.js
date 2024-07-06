@@ -4,8 +4,8 @@ import './SelectInput.css'
 
 const SelectInput = ({ label, value, onChange }) => {
   return (
-    <div className="select-input">
-      <label>{label}</label>
+    <label className="select-input">
+      <span>{label}</span>
       <select value={value} onChange={onChange}>
         <option value="" disabled>
           Select a category
@@ -14,7 +14,7 @@ const SelectInput = ({ label, value, onChange }) => {
         <option value="category2">Category 2</option>
         <option value="category3">Category 3</option>
       </select>
-    </div>
+    </label>
   )
 }
 

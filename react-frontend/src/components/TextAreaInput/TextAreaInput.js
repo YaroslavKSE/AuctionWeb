@@ -4,10 +4,10 @@ import './TextAreaInput.css'
 
 const TextAreaInput = ({ label, value, onChange }) => {
   return (
-    <div className="textarea-input">
-      <label>{label}</label>
+    <label className="textarea-input">
+      <span>{label}</span>
       <textarea value={value} onChange={onChange}></textarea>
-    </div>
+    </label>
   )
 }
 

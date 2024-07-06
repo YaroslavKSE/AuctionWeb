@@ -4,8 +4,8 @@ import './TextInput.css'
 
 const TextInput = ({ type, placeholder, value, onChange, label }) => {
   return (
-    <div className="text-input-container">
-      {label && <label className="text-input-label">{label}</label>}
+    <label className="text-input-container">
+      {label && <span className="text-input-label">{label}</span>}
       <input
         className="text-input"
         type={type}
@@ -13,7 +13,7 @@ const TextInput = ({ type, placeholder, value, onChange, label }) => {
         value={value}
         onChange={onChange}
       />
-    </div>
+    </label>
   )
 }
 

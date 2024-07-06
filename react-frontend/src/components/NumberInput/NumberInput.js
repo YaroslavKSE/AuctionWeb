@@ -4,10 +4,10 @@ import './NumberInput.css'
 
 const NumberInput = ({ label, value, onChange }) => {
   return (
-    <div className="number-input">
-      <label>{label}</label>
+    <label className="number-input">
+      <span>{label}</span>
       <input type="number" value={value} onChange={onChange} />
-    </div>
+    </label>
   )
 }
 

@@ -48,4 +48,5 @@ LoginForm.propTypes = {
   password: PropTypes.string,
   error: PropTypes.string
 }
+
 export default LoginForm
