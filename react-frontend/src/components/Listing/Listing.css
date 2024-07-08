@@ -21,11 +21,15 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
+  max-width: 250px;
+  max-height: 250px;
 }
 
 .listing__image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .next-image-button {

@@ -64,8 +64,12 @@ export const getBidsByListingId = async (listingId) => {
 }
 
 export const placeBid = async (listingId, amount) => {
-  const response = await axios.post(`${API_BASE_URL}/bids/${listingId}/place`, { amount })
-  return response.data
+  try {
+    const response = await axiosInstance.post(`/bids/${listingId}/place`, { amount })
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
 }
 
 export const addToWatchlist = async (listingId) => {

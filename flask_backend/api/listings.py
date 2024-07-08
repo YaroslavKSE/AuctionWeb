@@ -49,6 +49,8 @@ def get_listings():
             "title": listing['title'],
             "description": listing['description'],
             "starting_bid": listing['starting_bid'],
+            "current_bid": listing.get('current_bid', None),
+            "current_bidder_id": listing.get('current_bidder_id', None),
             "images": listing.get('images', []),
             "categories": listing.get('categories', []),
             "owner_id": listing['owner_id'],

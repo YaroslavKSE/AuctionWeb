@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState, useContext } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import Header from '../components/Header/Header'
 import Nav from '../components/Navigation/Nav'
 import TextInput from '../components/TextInput/TextInput'
@@ -13,6 +14,8 @@ import './styles/ListingPage.css'
 
 const ListingPage = () => {
   const { listingId } = useParams()
+  const navigate = useNavigate()
+  const { isAuthenticated } = useContext(AuthContext)
   const [listing, setListing] = useState(null)
   const [bidAmount, setBidAmount] = useState('')
   const [isPopupOpen, setIsPopupOpen] = useState(false)
@@ -44,6 +47,12 @@ const ListingPage = () => {
   }, [listingId])
 
   const handleBidSubmit = async () => {
+    if (!isAuthenticated) {
+      alert('Please log in to place a bid.')
+      navigate('/login') // Use navigate instead of history.push
+      return
+    }
+
     try {
       console.log('Submitting bid:', bidAmount)
       await placeBid(listingId, bidAmount)
@@ -60,6 +69,12 @@ const ListingPage = () => {
   }
 
   const handleWatchlist = async () => {
+    if (!isAuthenticated) {
+      alert('Please log in to add to watchlist.')
+      navigate('/login') // Use navigate instead of history.push
+      return
+    }
+
     try {
       await addToWatchlist(listingId)
       alert('Listing added to watchlist')
@@ -81,34 +96,42 @@ const ListingPage = () => {
       <Header />
       <Nav />
       <div className="listing-title">{listing.title}</div>
-      <Listing
-        title={listing.title}
-        images={listing.images}
-        price={listing.current_bid || listing.starting_bid + ' USD'}
-        created_at={listing.created_at}
-        owner_id={listing.owner_id}
-        onWatchlistClick={handleWatchlist}
-      />
-      <div className="bid-section">
-        <TextInput
-          label="Enter new Bid"
-          type="number"
-          placeholder="Enter your bid"
-          value={bidAmount}
-          onChange={(e) => setBidAmount(e.target.value)}
-        />
-        <Button
-          onClick={() => {
-            console.log('Button clicked')
-            setIsPopupOpen(true)
-          }}
-          class="button"
-          type="submit">
-          Place bid
-        </Button>
-        <PreviousBids bids={bids} />
+      <div className="listing-content">
+        <div className="listing-container">
+          <Listing
+            title={listing.title}
+            images={listing.images}
+            price={listing.current_bid || listing.starting_bid + ' USD'}
+            created_at={listing.created_at}
+            owner_id={listing.owner_id}
+            onWatchlistClick={handleWatchlist}
+          />
+        </div>
+        <div className="detailed-description">
+          <DetailedDescription description={listing.description} />
+        </div>
+        <div className="bid-section">
+          <TextInput
+            label="Enter new Bid"
+            type="number"
+            placeholder="Enter your bid"
+            value={bidAmount}
+            onChange={(e) => setBidAmount(e.target.value)}
+          />
+          <Button
+            onClick={() => {
+              console.log('Button clicked')
+              setIsPopupOpen(true)
+            }}
+            class="button"
+            type="submit">
+            Place bid
+          </Button>
+        </div>
+        <div className="previous-bids">
+          <PreviousBids bids={bids} />
+        </div>
       </div>
-      <DetailedDescription description={listing.description} />
       {isPopupOpen && (
         <Popup
           title="Confirm Bid"
