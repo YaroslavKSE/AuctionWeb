@@ -77,7 +77,11 @@ export const placeBid = async (listingId, amount) => {
     const response = await axiosInstance.post(`/bids/${listingId}/place`, { amount })
     return response.data
   } catch (error) {
-    throw error.response.data
+    if (error.response && error.response.data && error.response.data.error) {
+      throw new Error(error.response.data.error)
+    } else {
+      throw new Error('Failed to place bid')
+    }
   }
 }
 

@@ -49,19 +49,18 @@ const ListingPage = () => {
   const handleBidSubmit = async () => {
     if (!isAuthenticated) {
       alert('Please log in to place a bid.')
-      navigate('/login') // Use navigate instead of history.push
+      navigate('/login')
       return
     }
 
     try {
-      console.log('Submitting bid:', bidAmount)
       await placeBid(listingId, bidAmount)
       setIsSuccess(true)
       setBidAmount('')
       const updatedBids = await getBidsByListingId(listingId)
       setBids(updatedBids)
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Failed to place bid')
+      setErrorMessage(error.message)
       setIsSuccess(false)
     } finally {
       setIsPopupOpen(false)
@@ -71,7 +70,7 @@ const ListingPage = () => {
   const handleWatchlist = async () => {
     if (!isAuthenticated) {
       alert('Please log in to add to watchlist.')
-      navigate('/login') // Use navigate instead of history.push
+      navigate('/login')
       return
     }
 
@@ -118,13 +117,7 @@ const ListingPage = () => {
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
           />
-          <Button
-            onClick={() => {
-              console.log('Button clicked')
-              setIsPopupOpen(true)
-            }}
-            class="button"
-            type="submit">
+          <Button onClick={() => setIsPopupOpen(true)} class="button" type="submit">
             Place bid
           </Button>
         </div>
@@ -138,6 +131,7 @@ const ListingPage = () => {
           message="Are you sure you want to place this bid?"
           onConfirm={handleBidSubmit}
           onClose={handleClosePopup}
+          errorMessage={errorMessage} // Pass the error message to the popup
         />
       )}
       {isSuccess && (
@@ -148,7 +142,7 @@ const ListingPage = () => {
           onClose={handleClosePopup}
         />
       )}
-      {errorMessage && (
+      {errorMessage && !isPopupOpen && (
         <Popup
           title="Error"
           message={errorMessage}

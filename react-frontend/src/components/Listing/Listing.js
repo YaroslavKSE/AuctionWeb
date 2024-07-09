@@ -2,12 +2,24 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import './Listing.css'
 import nextIcon from './nextImage.png'
+import heartTransparent from './heart_transparent.png' // Replace with your transparent heart icon path
+import heartFull from './heart_full.png' // Replace with your full heart icon path
+import Alert from '../Alert/Alert' // Import the Alert component
 
+// eslint-disable-next-line no-unused-vars
 const Listing = ({ images, title, price, createdAt, seller, onClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isInWatchlist, setIsInWatchlist] = useState(false)
+  const [alertMessage, setAlertMessage] = useState(null)
 
   const handleNextImage = () => {
     setCurrentImageIndex((currentImageIndex + 1) % images.length)
+  }
+
+  const handleWatchlistToggle = () => {
+    setIsInWatchlist(!isInWatchlist)
+    setAlertMessage(isInWatchlist ? 'Removed from watchlist' : 'Added to watchlist')
+    setTimeout(() => setAlertMessage(null), 2000) // Hide alert after 2 seconds
   }
 
   return (
@@ -23,7 +35,10 @@ const Listing = ({ images, title, price, createdAt, seller, onClick }) => {
         <div className="listing__price">{price}</div>
         <div className="listing__created-at">{createdAt}</div>
       </div>
-      <div className="listing__seller">{seller}</div>
+      <div className="listing__watchlist" onClick={handleWatchlistToggle}>
+        <img src={isInWatchlist ? heartFull : heartTransparent} alt="Watchlist" />
+      </div>
+      {alertMessage && <Alert message={alertMessage} />}
     </div>
   )
 }

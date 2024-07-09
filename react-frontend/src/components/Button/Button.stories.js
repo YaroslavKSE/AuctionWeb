@@ -25,3 +25,10 @@ Custom.args = {
   type: 'button',
   children: 'Custom Button'
 }
+
+export const Transparent = Template.bind({})
+Transparent.args = {
+  type: 'button',
+  children: 'Transparent Button',
+  variant: 'transparent'
+}
