@@ -35,6 +35,15 @@ export const login = async (email, password) => {
   }
 }
 
+export const logout = async () => {
+  try {
+    const response = await axiosInstance.post('/auth/logout')
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
+}
+
 export const getListings = async () => {
   try {
     const response = await axiosInstance.get('/listings')

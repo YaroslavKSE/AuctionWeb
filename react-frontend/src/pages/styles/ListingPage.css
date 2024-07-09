@@ -34,16 +34,15 @@
   flex-direction: column;
 }
 
-.previous-bids {
+.previous-bids-div {
   grid-column: 1 / 2;
   grid-row: 3 / 4;
 }
 
-.detailed-description {
+.detailed-description-div {
   grid-column: 2 / 3;
   grid-row: 2 / 4;
 }
-
 /* Styles for large screens */
 @media (min-width: 768px) {
   .listing-content {

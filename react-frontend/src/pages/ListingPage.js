@@ -107,7 +107,7 @@ const ListingPage = () => {
             onWatchlistClick={handleWatchlist}
           />
         </div>
-        <div className="detailed-description">
+        <div className="detailed-description-div">
           <DetailedDescription description={listing.description} />
         </div>
         <div className="bid-section">
@@ -128,7 +128,7 @@ const ListingPage = () => {
             Place bid
           </Button>
         </div>
-        <div className="previous-bids">
+        <div className="previous-bids-div">
           <PreviousBids bids={bids} />
         </div>
       </div>

@@ -27,7 +27,7 @@ const RegisterForm = () => {
       await register(email, password, name, surname)
       navigate('/login')
     } catch (err) {
-      setError(err.message)
+      setError(err.error || 'An unexpected error occurred')
     }
   }
 
