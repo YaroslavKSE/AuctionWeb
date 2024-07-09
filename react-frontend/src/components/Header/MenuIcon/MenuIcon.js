@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 const MenuIcon = ({ onClick }) => {
   return (
     <div className="menu-icon" onClick={onClick}>
-      <div className="menu-icon__line"></div>
-      <div className="menu-icon__line"></div>
-      <div className="menu-icon__line"></div>
+      <span className="menu-icon__line"></span>
+      <span className="menu-icon__line"></span>
+      <span className="menu-icon__line"></span>
     </div>
   )
 }

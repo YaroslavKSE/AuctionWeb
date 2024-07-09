@@ -25,6 +25,7 @@ const AuthProvider = ({ children }) => {
       } catch (error) {
         setIsAuthenticated(false)
         setUser(null)
+        throw error
       }
     }
 
