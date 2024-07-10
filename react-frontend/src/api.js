@@ -63,12 +63,12 @@ export const createListing = async (listingData) => {
 }
 
 export const getListingById = async (listingId) => {
-  const response = await axios.get(`${API_BASE_URL}/listings/${listingId}`)
+  const response = await axiosInstance.get(`/listings/${listingId}`)
   return response.data
 }
 
 export const getBidsByListingId = async (listingId) => {
-  const response = await axios.get(`${API_BASE_URL}/bids/${listingId}`)
+  const response = await axiosInstance.get(`/bids/${listingId}`)
   return response.data
 }
 
@@ -86,6 +86,39 @@ export const placeBid = async (listingId, amount) => {
 }
 
 export const addToWatchlist = async (listingId) => {
-  const response = await axios.post(`${API_BASE_URL}/watchlist/add`, { listing_id: listingId })
-  return response.data
+  try {
+    const response = await axiosInstance.post('/watchlist/add', { listing_id: listingId })
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
+}
+
+export const fetchUserWatchlist = async () => {
+  try {
+    const response = await axiosInstance.get('/watchlist')
+    return response.data.listings
+  } catch (error) {
+    console.error(error)
+    throw new Error('Failed to fetch watchlist')
+  }
+}
+
+export const fetchWatchlistIds = async () => {
+  try {
+    const response = await axiosInstance.get('/watchlist/ids')
+    return response.data.listing_ids
+  } catch (error) {
+    console.error(error)
+    throw new Error('Failed to fetch watchlist IDs')
+  }
+}
+
+export const removeFromWatchlist = async (listingId) => {
+  try {
+    const response = await axiosInstance.post('/watchlist/remove', { listing_id: listingId })
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
 }

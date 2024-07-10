@@ -1,25 +1,60 @@
-import React, { useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import './Listing.css'
 import nextIcon from './nextImage.png'
-import heartTransparent from './heart_transparent.png' // Replace with your transparent heart icon path
-import heartFull from './heart_full.png' // Replace with your full heart icon path
-import Alert from '../Alert/Alert' // Import the Alert component
+import heartTransparent from './heart_transparent.png'
+import heartFull from './heart_full.png'
+import Alert from '../Alert/Alert'
+import { AuthContext } from '../../../context/AuthContext'
+import { addToWatchlist, removeFromWatchlist } from '../../api'
 
-// eslint-disable-next-line no-unused-vars
-const Listing = ({ images, title, price, createdAt, seller, onClick }) => {
+const Listing = ({
+  images,
+  title,
+  price,
+  createdAt,
+  // eslint-disable-next-line no-unused-vars
+  seller,
+  onClick,
+  listingId,
+  initialIsInWatchlist
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isInWatchlist, setIsInWatchlist] = useState(false)
+  const [isInWatchlist, setIsInWatchlist] = useState(initialIsInWatchlist)
   const [alertMessage, setAlertMessage] = useState(null)
+  const { isAuthenticated } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setIsInWatchlist(false)
+    }
+  }, [isAuthenticated])
 
   const handleNextImage = () => {
     setCurrentImageIndex((currentImageIndex + 1) % images.length)
   }
 
-  const handleWatchlistToggle = () => {
-    setIsInWatchlist(!isInWatchlist)
-    setAlertMessage(isInWatchlist ? 'Removed from watchlist' : 'Added to watchlist')
-    setTimeout(() => setAlertMessage(null), 2000) // Hide alert after 2 seconds
+  const handleWatchlistToggle = async () => {
+    if (!isAuthenticated) {
+      setAlertMessage('Please log in to add to watchlist')
+      setTimeout(() => setAlertMessage(null), 2000)
+      return
+    }
+
+    try {
+      let response
+      if (isInWatchlist) {
+        response = await removeFromWatchlist(listingId)
+      } else {
+        response = await addToWatchlist(listingId)
+      }
+      setIsInWatchlist(!isInWatchlist)
+      setAlertMessage(response.message)
+      setTimeout(() => setAlertMessage(null), 2000)
+    } catch (error) {
+      setAlertMessage('Error updating watchlist')
+      setTimeout(() => setAlertMessage(null), 2000)
+    }
   }
 
   return (
@@ -49,7 +84,9 @@ Listing.propTypes = {
   price: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   seller: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  listingId: PropTypes.string.isRequired,
+  initialIsInWatchlist: PropTypes.bool.isRequired // New prop
 }
 
 export default Listing

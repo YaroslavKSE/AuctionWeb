@@ -1,51 +1,45 @@
-import React, { useState, useEffect } from 'react'
-import './styles/ActiveListingsPage.css'
+import React, { useState, useEffect, useContext } from 'react'
+import './styles/WatchlistPage.css'
 import Listing from '../components/Listing/Listing'
-import { getListings, fetchWatchlistIds } from '../api'
-import { useNavigate } from 'react-router-dom'
+import { fetchUserWatchlist } from '../api'
 import Layout from '../components/Layout/Layout'
+import { AuthContext } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
-const ActiveListingsPage = () => {
+const WatchlistPage = () => {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
-  const [watchlist, setWatchlist] = useState([])
+  const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchListings = async () => {
+    const fetchWatchlist = async () => {
       try {
-        const data = await getListings()
+        const data = await fetchUserWatchlist()
         setListings(data)
       } catch (error) {
-        console.error('Error fetching listings:', error)
+        console.error('Error fetching watchlist:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    const fetchUserWatchlist = async () => {
-      try {
-        const data = await fetchWatchlistIds()
-        setWatchlist(data)
-      } catch (error) {
-        console.error('Error fetching watchlist IDs:', error)
-      }
+    if (isAuthenticated) {
+      fetchWatchlist().catch((error) => console.error('Unhandled error in fetchWatchlist:', error))
+    } else {
+      setLoading(false)
     }
-
-    fetchListings().catch((error) => console.error('Unhandled error in fetchListings:', error))
-    fetchUserWatchlist().catch((error) =>
-      console.error('Unhandled error in fetchUserWatchlist:', error)
-    )
-  }, [])
+  }, [isAuthenticated])
 
   return (
     <Layout>
-      <div className="active-listings-page">
+      <div className="watchlist-page">
+        <h1>Your Watchlist</h1>
         <div className="listings-container">
           {loading ? (
-            <p>Loading listings...</p>
+            <p>Loading watchlist...</p>
           ) : listings.length === 0 ? (
-            <p>No listings available.</p>
+            <p>No items in your watchlist.</p>
           ) : (
             listings.map((listing) => (
               <Listing
@@ -58,7 +52,7 @@ const ActiveListingsPage = () => {
                 seller={'Seller Icon'}
                 onClick={() => navigate(`/listing/${listing.id}`)}
                 listingId={listing.id}
-                initialIsInWatchlist={watchlist.includes(listing.id)}
+                initialIsInWatchlist={true} // Items in watchlist will be marked as true initially
               />
             ))
           )}
@@ -68,4 +62,4 @@ const ActiveListingsPage = () => {
   )
 }
 
-export default ActiveListingsPage
+export default WatchlistPage

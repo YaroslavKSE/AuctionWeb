@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AuthProvider from '../context/AuthContext'
 import ListingPage from './pages/ListingPage'
+import WatchlistPage from './pages/WatchlistPage'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegisterPage />} />
           <Route path="/listing/:listingId" element={<ListingPage />} />
+          <Route path="/watchlist" element={<WatchlistPage />} />
         </Routes>
       </Router>
     </AuthProvider>
