@@ -5,9 +5,11 @@ import NavLink from './NavLink/NavLink'
 const Nav = () => {
   return (
     <nav className="nav">
-      <NavLink href="/categories" label="Categories" />
-      <NavLink href="/active-listings" label="Active Listings" />
-      <NavLink href="/create-listing" label="Create Listing" />
+      <div className="nav-container">
+        <NavLink href="/watchlist" label="Watchlist" />
+        <NavLink href="/active-listings" label="Active Listings" />
+        <NavLink href="/create-listing" label="Create Listing" />
+      </div>
     </nav>
   )
 }

@@ -94,20 +94,19 @@ const ListingPage = () => {
     <div className="listing-page">
       <Header />
       <Nav />
-      <div className="listing-title">{listing.title}</div>
       <div className="listing-content">
+        <h1 className="listing-title">{listing.title}</h1>
         <div className="listing-container">
-          <Listing
-            title={listing.title}
-            images={listing.images}
-            price={listing.current_bid || listing.starting_bid + ' USD'}
-            created_at={listing.created_at}
-            owner_id={listing.owner_id}
-            onWatchlistClick={handleWatchlist}
-          />
-        </div>
-        <div className="detailed-description-div">
-          <DetailedDescription description={listing.description} />
+          <div className="listing-details">
+            <Listing
+              title={listing.title}
+              images={listing.images}
+              price={listing.current_bid || listing.starting_bid + ' USD'}
+              created_at={listing.created_at}
+              owner_id={listing.owner_id}
+              onWatchlistClick={handleWatchlist}
+            />
+          </div>
         </div>
         <div className="bid-section">
           <TextInput
@@ -117,9 +116,12 @@ const ListingPage = () => {
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
           />
-          <Button onClick={() => setIsPopupOpen(true)} class="button" type="submit">
+          <Button onClick={() => setIsPopupOpen(true)} className="button" type="submit">
             Place bid
           </Button>
+        </div>
+        <div className="detailed-description-div">
+          <DetailedDescription description={listing.description} />
         </div>
         <div className="previous-bids-div">
           <PreviousBids bids={bids} />

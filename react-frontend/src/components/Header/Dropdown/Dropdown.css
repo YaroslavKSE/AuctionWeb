@@ -1,29 +1,35 @@
 .dropdown {
-  display: flex;
-  flex-direction: column;
   position: absolute;
-  top: 64px; /* Adjust to position the dropdown below the menu icon */
+  top: 100%;
   right: 0;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
   border-radius: 4px;
-  animation: dropdownAnimation 0.3s ease;
-  z-index: 1000; /* Ensure the dropdown is above other elements */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  min-width: 180px;
+  z-index: 1000;
 }
 
 .dropdown a {
-  padding: 10px;
-  text-decoration: none;
+  display: block;
+  padding: 10px 20px;
   color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
-@keyframes dropdownAnimation {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+.dropdown a:hover {
+  background-color: #f5f5f5;
+  color: #4CAF50;
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    min-width: 150px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .dropdown a {
+    padding: 8px 15px;
+    font-size: 14px;
   }
 }

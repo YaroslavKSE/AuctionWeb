@@ -1,16 +1,25 @@
 .image-input {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .image-input label {
+  font-size: 14px;
+  color: #555;
   margin-bottom: 5px;
 }
 
-.image-input input {
+.image-input input[type="file"] {
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: white;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 .image-preview {
@@ -24,6 +33,5 @@
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border: 1px solid #ddd;
   border-radius: 4px;
 }

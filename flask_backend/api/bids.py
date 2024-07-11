@@ -18,6 +18,11 @@ def place_bid(listing_id):
     if not bid_amount:
         return jsonify({"error": "Bid amount is required"}), 400
 
+    try:
+        bid_amount = int(bid_amount)
+    except ValueError:
+        return jsonify({"error": "Invalid bid amount"}), 400
+
     listing = find_listing_by_id(listing_id)
 
     if not listing:

@@ -1,15 +1,33 @@
 .select-input {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.select-input label {
+.select-input span {
+  font-size: 14px;
+  color: #555;
   margin-bottom: 5px;
 }
 
 .select-input select {
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: white;
+  transition: border-color 0.3s ease;
   box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.select-input select:focus {
+  outline: none;
+  border-color: #007bff;
 }
