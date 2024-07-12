@@ -26,7 +26,7 @@ s3_client = boto3.client(
     aws_secret_access_key=DO_SECRET_KEY
 )
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'heic', 'heif', 'mov'}
 
 
 def allowed_file(filename):
