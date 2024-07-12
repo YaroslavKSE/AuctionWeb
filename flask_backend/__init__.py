@@ -34,7 +34,7 @@ def create_app():
     login_manager.login_view = 'api.auth.login'
 
     # Enable CORS with credentials
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+    CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONTEND_URI")}}, supports_credentials=True)
 
     # Handle OPTIONS requests globally
     @app.before_request
