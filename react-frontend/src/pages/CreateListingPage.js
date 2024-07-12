@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout/Layout'
 import TextInput from '../components/TextInput/TextInput'
 import SelectInput from '../components/SelectInput/SelectInput'
@@ -7,10 +8,14 @@ import TextAreaInput from '../components/TextAreaInput/TextAreaInput'
 import NumberInput from '../components/NumberInput/NumberInput'
 import Button from '../components/Button/Button'
 import Popup from '../components/Popup/Popup'
+import Alert from '../components/Alert/Alert'
 import { createListing } from '../api'
+import { AuthContext } from '../../context/AuthContext'
 import './styles/CreateListingPage.css'
 
 const CreateListingPage = () => {
+  const { isAuthenticated } = useContext(AuthContext)
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
   const [images, setImages] = useState([])
@@ -19,9 +24,24 @@ const CreateListingPage = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [showAuthAlert, setShowAuthAlert] = useState(false)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowAuthAlert(true)
+      const timer = setTimeout(() => {
+        navigate('/login')
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (!isAuthenticated) {
+      setShowAuthAlert(true)
+      return
+    }
     setIsPopupOpen(true)
   }
 
@@ -53,6 +73,21 @@ const CreateListingPage = () => {
     setIsPopupOpen(false)
     setIsSuccess(false)
     setErrorMessage('')
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Layout>
+        <div className="create-listing-page">
+          {showAuthAlert && (
+            <Alert
+              message="You must be logged in to create a listing. Redirecting to login page..."
+              type="warning"
+            />
+          )}
+        </div>
+      </Layout>
+    )
   }
 
   return (

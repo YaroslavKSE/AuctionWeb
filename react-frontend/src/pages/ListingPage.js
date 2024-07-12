@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import Header from '../components/Header/Header'
 import Nav from '../components/Navigation/Nav'
@@ -9,12 +9,12 @@ import Popup from '../components/Popup/Popup'
 import Listing from '../components/Listing/Listing'
 import PreviousBids from '../components/PreviousBids/PreviousBids'
 import DetailedDescription from '../components/DetailedDescription/DetailedDescription'
+import Alert from '../components/Alert/Alert'
 import { getListingById, placeBid, addToWatchlist, getBidsByListingId } from '../api'
 import './styles/ListingPage.css'
 
 const ListingPage = () => {
   const { listingId } = useParams()
-  const navigate = useNavigate()
   const { isAuthenticated } = useContext(AuthContext)
   const [listing, setListing] = useState(null)
   const [bidAmount, setBidAmount] = useState('')
@@ -22,6 +22,7 @@ const ListingPage = () => {
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [bids, setBids] = useState([])
+  const [showAlert, setShowAlert] = useState(false)
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -48,8 +49,8 @@ const ListingPage = () => {
 
   const handleBidSubmit = async () => {
     if (!isAuthenticated) {
-      alert('Please log in to place a bid.')
-      navigate('/login')
+      setShowAlert(true)
+      setTimeout(() => setShowAlert(false), 3000) // Hide alert after 3 seconds
       return
     }
 
@@ -69,8 +70,8 @@ const ListingPage = () => {
 
   const handleWatchlist = async () => {
     if (!isAuthenticated) {
-      alert('Please log in to add to watchlist.')
-      navigate('/login')
+      setShowAlert(true)
+      setTimeout(() => setShowAlert(false), 3000) // Hide alert after 3 seconds
       return
     }
 
@@ -94,6 +95,7 @@ const ListingPage = () => {
     <div className="listing-page">
       <Header />
       <Nav />
+      {showAlert && <Alert message="You must be logged in to place new bid." type="warning" />}
       <div className="listing-content">
         <h1 className="listing-title">{listing.title}</h1>
         <div className="listing-container">
@@ -116,7 +118,10 @@ const ListingPage = () => {
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
           />
-          <Button onClick={() => setIsPopupOpen(true)} className="button" type="submit">
+          <Button
+            onClick={() => (isAuthenticated ? setIsPopupOpen(true) : handleBidSubmit())}
+            className="button"
+            type="submit">
             Place bid
           </Button>
         </div>
@@ -133,7 +138,7 @@ const ListingPage = () => {
           message="Are you sure you want to place this bid?"
           onConfirm={handleBidSubmit}
           onClose={handleClosePopup}
-          errorMessage={errorMessage} // Pass the error message to the popup
+          errorMessage={errorMessage}
         />
       )}
       {isSuccess && (
