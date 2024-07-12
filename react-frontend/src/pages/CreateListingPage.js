@@ -25,6 +25,7 @@ const CreateListingPage = () => {
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showAuthAlert, setShowAuthAlert] = useState(false)
+  const [showValidationAlert, setShowValidationAlert] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -36,10 +37,25 @@ const CreateListingPage = () => {
     }
   }, [isAuthenticated, navigate])
 
+  const validateForm = () => {
+    return (
+      title.trim() !== '' &&
+      category !== '' &&
+      description.trim() !== '' &&
+      price.trim() !== '' &&
+      images.length > 0
+    )
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!isAuthenticated) {
       setShowAuthAlert(true)
+      return
+    }
+    if (!validateForm()) {
+      setShowValidationAlert(true)
+      setTimeout(() => setShowValidationAlert(false), 3000)
       return
     }
     setIsPopupOpen(true)
@@ -93,6 +109,9 @@ const CreateListingPage = () => {
   return (
     <Layout>
       <div className="create-listing-page">
+        {showValidationAlert && (
+          <Alert message="Please fill in all fields and add at least one image." type="error" />
+        )}
         <form className="create-listing-form" onSubmit={handleSubmit}>
           <TextInput
             label="Title"
