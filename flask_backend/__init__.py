@@ -28,6 +28,7 @@ def create_app():
 
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", os.urandom(24))
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
 
     # Use environment variable to determine if HTTPS is being used
     use_https = os.getenv('USE_HTTPS', 'false').lower() == 'true'
