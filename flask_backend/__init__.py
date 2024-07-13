@@ -8,6 +8,7 @@ from bson import ObjectId
 from .models.user import User
 from .db_queries import mongo
 from .api.images import images
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Enable logging
 logging.basicConfig(level=logging.DEBUG)
@@ -20,11 +21,19 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
+
+    # Use ProxyFix only in production
+    if os.getenv('FLASK_ENV') == 'production':
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-    app.config["SECRET_KEY"] = os.urandom(24)  # Secret key for session management
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", os.urandom(24))
+
+    # Use environment variable to determine if HTTPS is being used
+    use_https = os.getenv('USE_HTTPS', 'false').lower() == 'true'
 
     app.config.update(
-        SESSION_COOKIE_SECURE=False,  # Set to True if using HTTPS
+        SESSION_COOKIE_SECURE=use_https,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Lax',
     )
@@ -41,12 +50,11 @@ def create_app():
     def handle_options_request():
         if request.method == 'OPTIONS':
             response = make_response('', 200)
-            response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+            response.headers.add("Access-Control-Allow-Origin", os.getenv("FRONTEND_URI"))
             response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
-            response.headers.add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, "
-                                                                 "Authorization")
+            response.headers.add("Access-Control-Allow-Headers",
+                                 "Origin, X-Requested-With, Content-Type, Accept, Authorization")
             response.headers.add("Access-Control-Allow-Credentials", "true")
-
             return response
 
     # User loader callback for Flask-Login
@@ -55,11 +63,9 @@ def create_app():
         try:
             user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
             if user:
-                logging.debug(f"User loaded: {user}")
                 return User(user)
         except Exception as e:
             logging.error(f"Error loading user: {e}")
-        logging.debug("User not found")
         return None
 
     from .api import api as api_blueprint
