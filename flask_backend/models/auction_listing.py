@@ -5,7 +5,7 @@ class AuctionListing:
         self.description = str(listing['description'])
         self.starting_bid = int(listing['starting_bid'])
         self.images = list(listing.get('images', []))
-        self.categories = list(listing.get('categories', []))
+        self.currency = str(listing['currency'])
         self.owner_id = str(listing['owner_id'])
         self.current_bid = int(listing['current_bid']) if listing.get('current_bid') is not None else None
         self.current_bidder_id = str(listing['current_bidder_id']) if listing.get('current_bidder_id') else None
@@ -20,7 +20,7 @@ class AuctionListing:
             'description': self.description,
             'starting_bid': self.starting_bid,
             'images': self.images,
-            'categories': self.categories,
+            'currency': self.currency,
             'owner_id': self.owner_id,
             'current_bid': self.current_bid,
             'current_bidder_id': self.current_bidder_id,

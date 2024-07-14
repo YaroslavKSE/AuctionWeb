@@ -20,6 +20,8 @@ const Dropdown = () => {
     <div className="dropdown">
       <a href="/edit-profile">Edit Profile</a>
       <a href="/watchlist">Watchlist</a>
+      <a href="/your-bids">Your Bids</a>
+      <a href="/your-listings">Your Listings</a>
       <a href="/help-support">Help & Support</a>
       <a href="/" onClick={handleLogout}>
         Logout

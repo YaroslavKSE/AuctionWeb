@@ -15,13 +15,14 @@ import {
   addToWatchlist,
   removeFromWatchlist,
   getBidsByListingId,
-  fetchWatchlistIds
+  fetchWatchlistIds,
+  closeListing
 } from '../api'
 import './styles/ListingPage.css'
 
 const ListingPage = () => {
   const { listingId } = useParams()
-  const { isAuthenticated } = useContext(AuthContext)
+  const { isAuthenticated, user } = useContext(AuthContext)
   const [listing, setListing] = useState(null)
   const [bidAmount, setBidAmount] = useState('')
   const [isPopupOpen, setIsPopupOpen] = useState(false)
@@ -97,6 +98,17 @@ const ListingPage = () => {
     }
   }
 
+  const handleCloseListing = async () => {
+    try {
+      await closeListing(listingId)
+      setIsSuccess(true)
+      await fetchListingAndBids()
+    } catch (error) {
+      setErrorMessage(error.message)
+      setIsSuccess(false)
+    }
+  }
+
   const handleClosePopup = () => {
     setIsPopupOpen(false)
     setIsSuccess(false)
@@ -109,6 +121,9 @@ const ListingPage = () => {
         <div>Loading...</div>
       </Layout>
     )
+
+  const isOwner = user && user.id === listing.owner_id
+  const isWinner = listing.status === 'closed' && user && user.id === listing.current_bidder_id
 
   return (
     <Layout>
@@ -123,9 +138,8 @@ const ListingPage = () => {
               <Listing
                 title={listing.title}
                 images={listing.images}
-                price={
-                  listing.current_bid ? `${listing.current_bid} USD` : `${listing.starting_bid} USD`
-                }
+                price={listing.current_bid || listing.starting_bid}
+                currency={listing.currency}
                 createdAt={listing.created_at}
                 owner_id={listing.owner_id}
                 listingId={listingId}
@@ -135,19 +149,43 @@ const ListingPage = () => {
             </div>
           </div>
           <div className="bid-section">
-            <TextInput
-              label="Enter new Bid"
-              type="number"
-              placeholder="Enter your bid"
-              value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
-            />
-            <Button
-              onClick={() => (isAuthenticated ? setIsPopupOpen(true) : handleBidSubmit())}
-              className="button"
-              type="submit">
-              Place bid
-            </Button>
+            {listing.status === 'active' && !isOwner && (
+              <>
+                <TextInput
+                  label="Enter new Bid"
+                  type="number"
+                  placeholder="Enter your bid"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(e.target.value)}
+                />
+                <Button
+                  onClick={() => (isAuthenticated ? setIsPopupOpen(true) : handleBidSubmit())}
+                  className="button"
+                  type="submit">
+                  Place bid
+                </Button>
+              </>
+            )}
+            {isOwner && listing.status === 'active' && (
+              <Button onClick={handleCloseListing} className="button" type="button">
+                Close Listing
+              </Button>
+            )}
+            {listing.status === 'closed' && (
+              <div className="listing-closed-message">
+                This listing is closed. The winning bid was {listing.current_bid} {listing.currency}
+                .
+              </div>
+            )}
+            {isWinner && (
+              <div className="listing-winner-message">Congratulations! You won this auction.</div>
+            )}
+          </div>
+          <div className="current-bid-section">
+            <h2>Current Bid</h2>
+            <p className="current-bid">
+              {listing.current_bid || listing.starting_bid} {listing.currency}
+            </p>
           </div>
           <div className="detailed-description-div">
             <DetailedDescription description={listing.description} />
@@ -168,7 +206,9 @@ const ListingPage = () => {
         {isSuccess && (
           <Popup
             title="Success"
-            message="Your bid has been placed successfully!"
+            message={
+              isOwner ? 'Your listing has been closed.' : 'Your bid has been placed successfully!'
+            }
             onConfirm={handleClosePopup}
             onClose={handleClosePopup}
           />

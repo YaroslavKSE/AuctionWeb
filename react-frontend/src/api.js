@@ -122,3 +122,21 @@ export const removeFromWatchlist = async (listingId) => {
     throw error.response.data
   }
 }
+
+export const getUserListings = async () => {
+  try {
+    const response = await axiosInstance.get('/listings/user')
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
+}
+
+export const closeListing = async (listingId) => {
+  try {
+    const response = await axiosInstance.post(`/listings/${listingId}/close`)
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
+}

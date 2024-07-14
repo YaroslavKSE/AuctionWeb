@@ -34,7 +34,7 @@ const WatchlistPage = () => {
   return (
     <Layout>
       <div className="watchlist-page">
-        <h1>Your Watchlist</h1>
+        <h1 className="watchlist-title">Your Watchlist</h1>
         <div className="listings-container">
           {loading ? (
             <p>Loading watchlist...</p>

@@ -2,17 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './SelectInput.css'
 
-const SelectInput = ({ label, value, onChange }) => {
+const SelectInput = ({ label, value, onChange, options }) => {
   return (
     <label className="select-input">
       <span>{label}</span>
       <select value={value} onChange={onChange}>
         <option value="" disabled>
-          Select a category
+          Select {label.toLowerCase()}
         </option>
-        <option value="category1">Category 1</option>
-        <option value="category2">Category 2</option>
-        <option value="category3">Category 3</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </label>
   )
@@ -21,7 +23,13 @@ const SelectInput = ({ label, value, onChange }) => {
 SelectInput.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  ).isRequired
 }
 
 export default SelectInput

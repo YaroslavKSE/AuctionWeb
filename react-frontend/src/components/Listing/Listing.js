@@ -12,9 +12,8 @@ const Listing = ({
   images,
   title,
   price,
+  currency,
   createdAt,
-  // eslint-disable-next-line no-unused-vars
-  seller,
   onClick,
   listingId,
   initialIsInWatchlist
@@ -67,7 +66,9 @@ const Listing = ({
       </div>
       <div className="listing__details" onClick={onClick}>
         <div className="listing__title">{title}</div>
-        <div className="listing__price">{price}</div>
+        <div className="listing__price">
+          {price} {currency}
+        </div>
         <div className="listing__created-at">{createdAt}</div>
       </div>
       <div className="listing__watchlist" onClick={handleWatchlistToggle}>
@@ -82,11 +83,12 @@ Listing.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
+  currency: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   seller: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   listingId: PropTypes.string.isRequired,
-  initialIsInWatchlist: PropTypes.bool.isRequired // New prop
+  initialIsInWatchlist: PropTypes.bool.isRequired
 }
 
 export default Listing

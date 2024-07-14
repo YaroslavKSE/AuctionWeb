@@ -14,10 +14,11 @@
 }
 
 .listing-title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 30px;
+  margin-bottom: 0;
+  margin-top: 0;
   text-align: center;
   padding: 20px;
   background-color: #ffffff;
@@ -60,6 +61,39 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.current-bid-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.current-bid-section h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.current-bid {
+  font-size: 36px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.listing-closed-message,
+.listing-winner-message {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.listing-winner-message {
+  color: #4CAF50;
+}
+
 @media (min-width: 768px) {
   .listing-content {
     grid-template-columns: 2fr 1fr;
@@ -79,8 +113,13 @@
     grid-row: 2 / 3;
   }
 
+  .current-bid-section {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
+
   .detailed-description-div {
-    grid-column: 1 / -1;
+    grid-column: 1 / 2;
     grid-row: 3 / 4;
   }
 

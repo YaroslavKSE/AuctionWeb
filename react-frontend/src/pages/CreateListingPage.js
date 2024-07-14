@@ -17,7 +17,7 @@ const CreateListingPage = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('')
+  const [currency, setCurrency] = useState('')
   const [images, setImages] = useState([])
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
@@ -26,6 +26,12 @@ const CreateListingPage = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [showAuthAlert, setShowAuthAlert] = useState(false)
   const [showValidationAlert, setShowValidationAlert] = useState(false)
+
+  const currencyOptions = [
+    { value: 'UAH', label: 'UAH' },
+    { value: 'USD', label: 'USD' },
+    { value: 'EUR', label: 'EUR' }
+  ]
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -40,7 +46,7 @@ const CreateListingPage = () => {
   const validateForm = () => {
     return (
       title.trim() !== '' &&
-      category !== '' &&
+      currency !== '' &&
       description.trim() !== '' &&
       price.trim() !== '' &&
       images.length > 0
@@ -68,13 +74,13 @@ const CreateListingPage = () => {
         description,
         starting_bid: price,
         images,
-        categories: category ? [category] : []
+        currency
       })
       setIsSuccess(true)
       setIsPopupOpen(false)
       // Clear form fields
       setTitle('')
-      setCategory('')
+      setCurrency('')
       setImages([])
       setDescription('')
       setPrice('')
@@ -110,7 +116,10 @@ const CreateListingPage = () => {
     <Layout>
       <div className="create-listing-page">
         {showValidationAlert && (
-          <Alert message="Please fill in all fields and add at least one image." type="error" />
+          <Alert
+            message="Please fill in all fields, select a currency, and add at least one image."
+            type="error"
+          />
         )}
         <form className="create-listing-form" onSubmit={handleSubmit}>
           <TextInput
@@ -121,9 +130,10 @@ const CreateListingPage = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
           <SelectInput
-            label="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            label="Currency"
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+            options={currencyOptions}
           />
           <ImageInput label="Add Images Here" images={images} setImages={setImages} />
           <TextAreaInput
@@ -132,7 +142,7 @@ const CreateListingPage = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
           <NumberInput
-            label="Set the Price"
+            label="Set the Starting Bid"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />

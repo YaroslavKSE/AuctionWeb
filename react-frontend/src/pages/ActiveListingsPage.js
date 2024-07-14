@@ -54,7 +54,8 @@ const ActiveListingsPage = () => {
                 title={listing.title}
                 description={listing.description}
                 createdAt={listing.created_at}
-                price={(listing.current_bid || listing.starting_bid) + ' USD'}
+                price={listing.current_bid || listing.starting_bid}
+                currency={listing.currency}
                 seller={'Seller Icon'}
                 onClick={() => navigate(`/listing/${listing.id}`)}
                 listingId={listing.id}

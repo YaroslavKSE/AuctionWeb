@@ -40,3 +40,7 @@ def find_listing_by_id(listing_id):
 
 def find_listings_by_category(category):
     return list(mongo.db.listings.find({"categories": category}))
+
+
+def find_listings_by_user_id(user_id):
+    return list(mongo.db.listings.find({"owner_id": user_id}))

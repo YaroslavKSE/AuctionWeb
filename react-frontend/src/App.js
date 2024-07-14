@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage'
 import AuthProvider from '../context/AuthContext'
 import ListingPage from './pages/ListingPage'
 import WatchlistPage from './pages/WatchlistPage'
+import UserListingsPage from './pages/UserListingsPage'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/signup" element={<RegisterPage />} />
           <Route path="/listing/:listingId" element={<ListingPage />} />
           <Route path="/watchlist" element={<WatchlistPage />} />
+          <Route path="/your-listings" element={<UserListingsPage />} />
         </Routes>
       </Router>
     </AuthProvider>
