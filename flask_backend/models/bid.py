@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Bid:
     def __init__(self, bid):
         self.id = str(bid['_id'])
@@ -12,5 +15,5 @@ class Bid:
             "listing_id": self.listing_id,
             "user_id": self.user_id,
             "amount": self.amount,
-            "created_at": self.created_at
+            "created_at": self.created_at.isoformat() if isinstance(self.created_at, datetime) else None
         }

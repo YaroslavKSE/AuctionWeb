@@ -1,4 +1,6 @@
 import axios from 'axios'
+import socket from './socket';
+
 
 // Get the API base URL from the environment variables
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
@@ -140,3 +142,43 @@ export const closeListing = async (listingId) => {
     throw error.response.data
   }
 }
+
+
+export const placeBidSocket = (listingId, amount) => {
+  return new Promise((resolve, reject) => {
+    console.log("Emitting place_bid event:", listingId, amount);
+    socket.emit('place_bid', { listing_id: listingId, amount: amount });
+
+    socket.once('bid_update', (data) => {
+      console.log("Received bid_update:", data);
+      resolve(data);
+    });
+
+    socket.once('bid_error', (error) => {
+      console.error("Received bid_error:", error);
+      reject(new Error(error.error));
+    });
+
+    // Add a timeout
+    setTimeout(() => {
+      console.log("Bid placement timed out");
+      reject(new Error("Bid placement timed out"));
+    }, 5000);
+  });
+};
+
+export const getBidsByListingIdSocket = (listingId) => {
+  return new Promise((resolve, reject) => {
+    socket.emit('get_bids', { listing_id: listingId });
+    socket.once('bids_data', (data) => resolve(data));
+    socket.once('bid_error', (error) => reject(new Error(error.error)));
+  });
+};
+
+export const closeListingSocket = (listingId) => {
+  return new Promise((resolve, reject) => {
+    socket.emit('close_listing', { listing_id: listingId });
+    socket.once('listing_closed', (data) => resolve(data));
+    socket.once('listing_error', (error) => reject(new Error(error.error)));
+  });
+};

@@ -76,7 +76,15 @@ module.exports = (env) => {
       compress: true,
       port: 3000,
       historyApiFallback: true,
-      hot: true
-    }
+      hot: true,
+      proxy: [
+        {
+          context: ['/api', '/socket.io'],
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          ws: true,
+        },
+      ],
+    },
   }
 }

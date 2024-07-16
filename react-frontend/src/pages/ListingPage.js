@@ -11,13 +11,14 @@ import DetailedDescription from '../components/DetailedDescription/DetailedDescr
 import Alert from '../components/Alert/Alert'
 import {
   getListingById,
-  placeBid,
+  placeBidSocket,
   addToWatchlist,
   removeFromWatchlist,
-  getBidsByListingId,
+  getBidsByListingIdSocket,
   fetchWatchlistIds,
-  closeListing
+  closeListingSocket
 } from '../api'
+import socket from '../socket'
 import './styles/ListingPage.css'
 
 const ListingPage = () => {
@@ -36,7 +37,7 @@ const ListingPage = () => {
     try {
       const listingData = await getListingById(listingId)
       setListing(listingData)
-      const bidsData = await getBidsByListingId(listingId)
+      const bidsData = await getBidsByListingIdSocket(listingId)
       setBids(bidsData)
     } catch (error) {
       console.error('Error fetching listing or bids:', error)
@@ -57,9 +58,39 @@ const ListingPage = () => {
   useEffect(() => {
     fetchListingAndBids()
     fetchWatchlistStatus()
+
+    // Set up WebSocket listeners
+    socket.on('bid_update', (newBid) => {
+      if (newBid.listing_id === listingId) {
+        setBids((prevBids) => [newBid, ...prevBids])
+        setListing((prevListing) => ({
+          ...prevListing,
+          current_bid: newBid.amount,
+          current_bidder_id: newBid.user_id
+        }))
+      }
+    })
+
+    socket.on('listing_closed', (data) => {
+      if (data.listing_id === listingId) {
+        setListing((prevListing) => ({
+          ...prevListing,
+          status: 'closed',
+          current_bid: data.final_bid,
+          current_bidder_id: data.winner_id
+        }))
+      }
+    })
+
+    // Clean up listeners on component unmount
+    return () => {
+      socket.off('bid_update')
+      socket.off('listing_closed')
+    }
   }, [listingId, isAuthenticated])
 
   const handleBidSubmit = async () => {
+    console.log("Attempting to place bid:", listingId, bidAmount);
     if (!isAuthenticated) {
       setShowAlert(true)
       setTimeout(() => setShowAlert(false), 3000)
@@ -67,11 +98,13 @@ const ListingPage = () => {
     }
 
     try {
-      await placeBid(listingId, bidAmount)
+      console.log("Calling placeBidSocket");
+      await placeBidSocket(listingId, bidAmount)
+      console.log("Bid placed successfully");
       setIsSuccess(true)
       setBidAmount('')
-      await fetchListingAndBids()
     } catch (error) {
+      console.error("Error placing bid:", error);
       setErrorMessage(error.message)
       setIsSuccess(false)
     } finally {
@@ -100,9 +133,8 @@ const ListingPage = () => {
 
   const handleCloseListing = async () => {
     try {
-      await closeListing(listingId)
+      await closeListingSocket(listingId)
       setIsSuccess(true)
-      await fetchListingAndBids()
     } catch (error) {
       setErrorMessage(error.message)
       setIsSuccess(false)
@@ -115,12 +147,13 @@ const ListingPage = () => {
     setErrorMessage('')
   }
 
-  if (!listing)
+  if (!listing) {
     return (
       <Layout>
         <div>Loading...</div>
       </Layout>
     )
+  }
 
   const isOwner = user && user.id === listing.owner_id
   const isWinner = listing.status === 'closed' && user && user.id === listing.current_bidder_id

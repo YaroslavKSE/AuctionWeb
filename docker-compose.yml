@@ -16,6 +16,8 @@ services:
       - ./flask_backend:/app
     networks:
       - auction_network
+    environment:
+      - PYTHONUNBUFFERED=1
 
   frontend:
     build:
@@ -28,6 +30,8 @@ services:
       - "3000:80"
     depends_on:
       - backend
+    networks:
+      - auction_network
 
   mongo:
     image: mongodb/mongodb-community-server:latest
@@ -41,6 +45,7 @@ services:
 
 networks:
   auction_network:
+    driver: bridge
 
 volumes:
   mongo_data:
