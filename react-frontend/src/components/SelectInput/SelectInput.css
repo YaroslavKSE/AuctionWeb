@@ -1,0 +1,15 @@
+.select-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-input label {
+  margin-bottom: 5px;
+}
+
+.select-input select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}

@@ -3,7 +3,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = (env) => {
   return {
@@ -44,7 +44,6 @@ module.exports = (env) => {
       runtimeChunk: 'single'
     },
     plugins: [
-      new CleanWebpackPlugin(),
       new ESLintPlugin({
         exclude: ['node_modules', 'dist'],
         context: path.resolve(__dirname, 'src')
@@ -63,6 +62,10 @@ module.exports = (env) => {
           minifyCSS: true,
           minifyURLs: true
         }
+      }),
+      new Dotenv({
+        path: '.env', // Path to .env file
+        safe: false // load .env.example (defaults to "false" which does not use dotenv-safe)
       })
     ],
     devServer: {

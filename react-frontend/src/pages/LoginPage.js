@@ -1,11 +1,17 @@
 import React from 'react'
-import Login from '../components/Login/Login'
+import './styles/LoginPage.css'
+import Logo from '../components/Header/Logo/Logo'
+import LoginForm from '../components/LoginForm/LoginForm'
 
 const LoginPage = () => {
   return (
-    <div className="auth-page">
-      <div className="logo">Logo here</div>
-      <Login onSuccess={() => (window.location.href = '/listings')} />
+    <div className="login-page">
+      <Logo className="logo--small" />
+      <h1>Login</h1>
+      <LoginForm />
+      <div className="register-link">
+        Not a member yet? <a href="/signup">Register</a>
+      </div>
     </div>
   )
 }

@@ -9,7 +9,8 @@ module.exports = {
   },
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
+    node: true
   },
   extends: [
     'eslint:recommended',
@@ -20,6 +21,7 @@ module.exports = {
   plugins: ['react', 'react-hooks'],
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'react/no-unescaped-entities': 0
+    'react/no-unescaped-entities': 0,
+    'prettier/prettier': 0
   }
 }
