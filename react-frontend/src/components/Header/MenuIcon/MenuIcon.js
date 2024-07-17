@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 
 const MenuIcon = ({ onClick }) => {
   return (
-    <span className="menu-icon" onClick={onClick}>
+    <button className="menu-icon" onClick={onClick}>
       <span className="menu-icon__line"></span>
       <span className="menu-icon__line"></span>
       <span className="menu-icon__line"></span>
-    </span>
+    </button>
   )
 }
 
