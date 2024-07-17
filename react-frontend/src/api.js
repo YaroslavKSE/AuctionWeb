@@ -31,7 +31,7 @@ export const login = async (email, password) => {
     const response = await axiosInstance.post('/auth/login', { email, password })
     return response.data
   } catch (error) {
-    throw error.response.data
+    throw Error(error.response.data)
   }
 }
 
@@ -49,7 +49,7 @@ export const getListings = async () => {
     const response = await axiosInstance.get('/listings')
     return response.data
   } catch (error) {
-    throw error.response.data
+    throw Error(error.response.data)
   }
 }
 
@@ -58,7 +58,7 @@ export const createListing = async (listingData) => {
     const response = await axiosInstance.post('/listings', listingData)
     return response.data
   } catch (error) {
-    throw error.response.data
+    throw Error(error.response.data)
   }
 }
 
