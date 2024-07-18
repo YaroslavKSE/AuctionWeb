@@ -3,14 +3,26 @@ import axios from 'axios'
 // Get the API base URL from the environment variables
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
-// Configure axios to include credentials
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true, // This ensures cookies are sent with each request
-  headers: {
-    'Content-Type': 'application/json'
+// Use a function to create the axios instance
+const createAxiosInstance = () => {
+  if (process.env.NODE_ENV === 'test') {
+    // For testing, return the default axios instance
+    return axios;
+  } else {
+    // For non-test environments, create a configured instance
+    return axios.create({
+      baseURL: API_BASE_URL,
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
-})
+};
+
+// Create the instance
+const axiosInstance = createAxiosInstance();
+
 
 export const register = async (email, password, name, surname) => {
   try {
@@ -19,10 +31,14 @@ export const register = async (email, password, name, surname) => {
       password,
       name,
       surname
-    })
-    return response.data
+    });
+    return response.data;
   } catch (error) {
-    throw error.response.data
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    } else {
+      throw new Error('Registration failed');
+    }
   }
 }
 
