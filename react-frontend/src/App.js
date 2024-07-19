@@ -25,7 +25,7 @@ function App() {
           <Route path="/watchlist" element={<WatchlistPage />} />
           <Route path="/your-listings" element={<UserListingsPage />} />
           <Route path="/your-bids" element={<UserBidsPage />} />
-          <Route path="/edit-profile" element={<UnderDevelopmentPage />} />
+          <Route path="/profile" element={<UnderDevelopmentPage />} />
           <Route path="/help-support" element={<UnderDevelopmentPage />} />
         </Routes>
       </Router>
