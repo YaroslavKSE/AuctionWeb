@@ -18,7 +18,7 @@ const Dropdown = () => {
 
   return (
     <div className="dropdown">
-      <a href="/edit-profile">Edit Profile</a>
+      <a href="/profile">Edit Profile</a>
       <a href="/watchlist">Watchlist</a>
       <a href="/your-bids">Your Bids</a>
       <a href="/your-listings">Your Listings</a>
