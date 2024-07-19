@@ -12,11 +12,9 @@ import Alert from '../components/Alert/Alert'
 import {
   getListingById,
   placeBid,
-  addToWatchlist,
-  removeFromWatchlist,
   getBidsByListingId,
-  fetchWatchlistIds,
-  closeListing
+  closeListing,
+  fetchWatchlistIds
 } from '../api'
 import './styles/ListingPage.css'
 
@@ -30,34 +28,46 @@ const ListingPage = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [bids, setBids] = useState([])
   const [showAlert, setShowAlert] = useState(false)
+  const [watchlist, setWatchlist] = useState([])
   const [isInWatchlist, setIsInWatchlist] = useState(false)
 
-  const fetchListingAndBids = async () => {
-    try {
-      const listingData = await getListingById(listingId)
-      setListing(listingData)
-      const bidsData = await getBidsByListingId(listingId)
-      setBids(bidsData)
-    } catch (error) {
-      console.error('Error fetching listing or bids:', error)
-    }
-  }
-
-  const fetchWatchlistStatus = async () => {
-    if (isAuthenticated) {
+  useEffect(() => {
+    const fetchListingAndBids = async () => {
       try {
-        const watchlistIds = await fetchWatchlistIds()
-        setIsInWatchlist(watchlistIds.includes(listingId))
+        const listingData = await getListingById(listingId)
+        setListing(listingData)
+        const bidsData = await getBidsByListingId(listingId)
+        setBids(bidsData)
       } catch (error) {
-        console.error('Error fetching watchlist status:', error)
+        console.error('Error fetching listing or bids:', error)
       }
     }
-  }
+
+    const fetchUserWatchlist = async () => {
+      if (isAuthenticated) {
+        try {
+          const data = await fetchWatchlistIds()
+          // console.log('Fetched watchlist:', data)
+          setWatchlist(data)
+        } catch (error) {
+          console.error('Error fetching watchlist IDs:', error)
+        }
+      } else {
+        setWatchlist([])
+      }
+    }
+
+    fetchListingAndBids()
+    fetchUserWatchlist()
+  }, [listingId, isAuthenticated])
 
   useEffect(() => {
-    fetchListingAndBids()
-    fetchWatchlistStatus()
-  }, [listingId, isAuthenticated])
+    if (watchlist.length > 0 && listingId) {
+      const listingInWatchlist = watchlist.includes(listingId)
+      //console.log('Is listing in watchlist:', listingInWatchlist)
+      setIsInWatchlist(listingInWatchlist)
+    }
+  }, [watchlist, listingId])
 
   const handleBidSubmit = async () => {
     if (!isAuthenticated) {
@@ -70,7 +80,11 @@ const ListingPage = () => {
       await placeBid(listingId, bidAmount)
       setIsSuccess(true)
       setBidAmount('')
-      await fetchListingAndBids()
+      // Refresh listing and bids after successful bid
+      const updatedListing = await getListingById(listingId)
+      setListing(updatedListing)
+      const updatedBids = await getBidsByListingId(listingId)
+      setBids(updatedBids)
     } catch (error) {
       setErrorMessage(error.message)
       setIsSuccess(false)
@@ -79,30 +93,13 @@ const ListingPage = () => {
     }
   }
 
-  const handleWatchlistToggle = async () => {
-    if (!isAuthenticated) {
-      setShowAlert(true)
-      setTimeout(() => setShowAlert(false), 3000)
-      return
-    }
-
-    try {
-      if (isInWatchlist) {
-        await removeFromWatchlist(listingId)
-      } else {
-        await addToWatchlist(listingId)
-      }
-      setIsInWatchlist(!isInWatchlist)
-    } catch (error) {
-      console.error('Error toggling watchlist:', error)
-    }
-  }
-
   const handleCloseListing = async () => {
     try {
       await closeListing(listingId)
       setIsSuccess(true)
-      await fetchListingAndBids()
+      // Refresh listing after closing
+      const updatedListing = await getListingById(listingId)
+      setListing(updatedListing)
     } catch (error) {
       setErrorMessage(error.message)
       setIsSuccess(false)
@@ -115,12 +112,9 @@ const ListingPage = () => {
     setErrorMessage('')
   }
 
-  if (!listing)
-    return (
-      <Layout>
-        <div>Loading...</div>
-      </Layout>
-    )
+  if (!listing) return <Layout>
+    <div>Loading...</div>
+  </Layout>
 
   const isOwner = user && user.id === listing.owner_id
   const isWinner = listing.status === 'closed' && user && user.id === listing.current_bidder_id
@@ -128,23 +122,22 @@ const ListingPage = () => {
   return (
     <Layout>
       <div className="listing-page">
-        {showAlert && (
-          <Alert message="You must be logged in to perform this action." type="warning" />
-        )}
+        {showAlert && <Alert message="You must be logged in to perform this action." type="warning" />}
         <div className="listing-content">
           <h1 className="listing-title">{listing.title}</h1>
           <div className="listing-container">
             <div className="listing-details">
               <Listing
-                title={listing.title}
+                key={listing.id}
                 images={listing.images}
+                title={listing.title}
+                description={listing.description}
+                createdAt={listing.created_at}
                 price={listing.current_bid || listing.starting_bid}
                 currency={listing.currency}
-                createdAt={listing.created_at}
-                owner_id={listing.owner_id}
-                listingId={listingId}
+                seller={'Seller Icon'}
+                listingId={listing.id}
                 initialIsInWatchlist={isInWatchlist}
-                onWatchlistClick={handleWatchlistToggle}
               />
             </div>
           </div>
@@ -161,7 +154,8 @@ const ListingPage = () => {
                 <Button
                   onClick={() => (isAuthenticated ? setIsPopupOpen(true) : handleBidSubmit())}
                   className="button"
-                  type="submit">
+                  type="submit"
+                >
                   Place bid
                 </Button>
               </>
@@ -173,8 +167,7 @@ const ListingPage = () => {
             )}
             {listing.status === 'closed' && (
               <div className="listing-closed-message">
-                This listing is closed. The winning bid was {listing.current_bid} {listing.currency}
-                .
+                This listing is closed. The winning bid was {listing.current_bid} {listing.currency}.
               </div>
             )}
             {isWinner && (
@@ -206,9 +199,7 @@ const ListingPage = () => {
         {isSuccess && (
           <Popup
             title="Success"
-            message={
-              isOwner ? 'Your listing has been closed.' : 'Your bid has been placed successfully!'
-            }
+            message={isOwner ? 'Your listing has been closed.' : 'Your bid has been placed successfully!'}
             onConfirm={handleClosePopup}
             onClose={handleClosePopup}
           />

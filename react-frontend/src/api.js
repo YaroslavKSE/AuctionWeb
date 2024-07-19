@@ -156,3 +156,12 @@ export const closeListing = async (listingId) => {
     throw error.response.data
   }
 }
+
+export const getUserBids = async () => {
+  try {
+    const response = await axiosInstance.get('/bids/user')
+    return response.data
+  } catch (error) {
+    throw error.response.data
+  }
+}

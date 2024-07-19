@@ -14,3 +14,13 @@ class Bid:
             "amount": self.amount,
             "created_at": self.created_at
         }
+
+    def calculate_status(self, bid):
+        if 'listing' in bid:
+            listing = bid['listing']
+            if listing['status'] == 'closed':
+                if str(listing['current_bidder_id']) == self.user_id:
+                    return 'Won'
+                else:
+                    return 'Lost'
+        return 'Active'
