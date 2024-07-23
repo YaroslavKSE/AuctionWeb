@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout/Layout'
 import Listing from '../components/Listing/Listing'
 import Button from '../components/Button/Button'
@@ -8,6 +9,7 @@ import './styles/UserListingsPage.css'
 const UserListingsPage = () => {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -62,6 +64,8 @@ const UserListingsPage = () => {
                   createdAt={listing.created_at}
                   listingId={listing.id}
                   initialIsInWatchlist={false}
+                  showWatchlistIcon={false}
+                  onClick={() => navigate(`/listing/${listing.id}`)}
                 />
                 {listing.status === 'active' && (
                   <Button

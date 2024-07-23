@@ -16,7 +16,9 @@ const Listing = ({
   createdAt,
   onClick,
   listingId,
-  initialIsInWatchlist
+  initialIsInWatchlist,
+  showWatchlistIcon = true
+
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isInWatchlist, setIsInWatchlist] = useState(initialIsInWatchlist)
@@ -69,9 +71,11 @@ const Listing = ({
         </div>
         <div className="listing__created-at">{createdAt}</div>
       </div>
-      <div className="listing__watchlist" onClick={handleWatchlistToggle}>
-        <img src={isInWatchlist ? heartFull : heartTransparent} alt="Watchlist" />
-      </div>
+      {showWatchlistIcon && (
+        <div className="listing__watchlist" onClick={handleWatchlistToggle}>
+          <img src={isInWatchlist ? heartFull : heartTransparent} alt="Watchlist" />
+        </div>
+      )}
       {alertMessage && <Alert message={alertMessage} />}
     </div>
   )
@@ -85,7 +89,8 @@ Listing.propTypes = {
   createdAt: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   listingId: PropTypes.string.isRequired,
-  initialIsInWatchlist: PropTypes.bool.isRequired
+  initialIsInWatchlist: PropTypes.bool.isRequired,
+  showWatchlistIcon: PropTypes.bool
 }
 
 export default Listing

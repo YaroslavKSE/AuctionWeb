@@ -68,6 +68,7 @@ const UserBidsPage = () => {
                   createdAt={bid.created_at}
                   listingId={bid.listing.id}
                   initialIsInWatchlist={false}
+                  showWatchlistIcon={false}
                   onClick={() => navigate(`/listing/${bid.listing.id}`)}
                 />
                 <div className="bid-details">
