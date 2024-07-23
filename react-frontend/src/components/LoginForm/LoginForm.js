@@ -21,8 +21,8 @@ const LoginForm = () => {
       await login(email, password)
       await updateAuthState()
       navigate('/active-listings')
-    } catch (err) {
-      setError(err.error || 'An unexpected error occurred')
+    } catch (error) {
+      setError(error.message || 'An unexpected error occurred')
     }
   }
 

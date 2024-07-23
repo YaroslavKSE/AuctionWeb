@@ -167,7 +167,7 @@ const ListingPage = () => {
             )}
             {listing.status === 'closed' && (
               <div className="listing-closed-message">
-                This listing is closed. The winning bid was {listing.current_bid} {listing.currency}.
+                This listing is closed. The winning bid was {listing.current_bid || listing.starting_bid} {listing.currency}.
               </div>
             )}
             {isWinner && (

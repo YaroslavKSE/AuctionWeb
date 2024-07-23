@@ -13,7 +13,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./flask_backend:/app
+      - ./flask_backend:/flask_backend
     networks:
       - auction_network
 

@@ -47,7 +47,8 @@ export const login = async (email, password) => {
     const response = await axiosInstance.post('/auth/login', { email, password })
     return response.data
   } catch (error) {
-    throw Error(error.response.data)
+    // Ensure error.message contains a descriptive message
+    throw new Error(error.response.data.error || 'Login failed')
   }
 }
 
@@ -65,7 +66,7 @@ export const getListings = async () => {
     const response = await axiosInstance.get('/listings')
     return response.data
   } catch (error) {
-    throw Error(error.response.data)
+    throw new Error(error.response.data.error || 'Login failed')
   }
 }
 
