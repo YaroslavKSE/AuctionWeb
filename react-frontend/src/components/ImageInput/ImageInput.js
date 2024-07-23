@@ -44,8 +44,14 @@ const ImageInput = ({ label, images, setImages }) => {
 
   return (
     <div className="image-input">
-      <label>{label}</label>
-      <input type="file" multiple onChange={handleImageChange} accept="image/*,.heic,.heif" />
+      <label htmlFor="image-upload">{label}</label>
+      <input
+        id="image-upload"
+        type="file"
+        multiple
+        onChange={handleImageChange}
+        accept="image/*,.heic,.heif"
+      />
       {isUploading && (
         <div className="upload-progress">
           <progress value={uploadProgress} max="100" />

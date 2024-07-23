@@ -1,46 +1,47 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './styles/ActiveListingsPage.css'
 import Listing from '../components/Listing/Listing'
 import { getListings, fetchWatchlistIds } from '../api'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout/Layout'
+import { AuthContext } from '../../context/AuthContext'
 
 const ActiveListingsPage = () => {
+  const { isAuthenticated } = useContext(AuthContext)
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
   const [watchlist, setWatchlist] = useState([])
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchListings = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getListings()
-        setListings(data)
+        setLoading(true)
+        setError(null)
+
+        const listingsData = await getListings()
+        setListings(listingsData)
+
+        if (isAuthenticated) {
+          const watchlistData = await fetchWatchlistIds()
+          setWatchlist(watchlistData)
+        }
       } catch (error) {
-        console.error('Error fetching listings:', error)
+        console.error('Error fetching data:', error)
+        setError('Failed to load listings. Please try again later.')
       } finally {
         setLoading(false)
       }
     }
 
-    const fetchUserWatchlist = async () => {
-      try {
-        const data = await fetchWatchlistIds()
-        setWatchlist(data)
-      } catch (error) {
-        console.error('Error fetching watchlist IDs:', error)
-      }
-    }
-
-    fetchListings().catch((error) => console.error('Unhandled error in fetchListings:', error))
-    fetchUserWatchlist().catch((error) =>
-      console.error('Unhandled error in fetchUserWatchlist:', error)
-    )
-  }, [])
+    fetchData()
+  }, [isAuthenticated])
 
   return (
     <Layout>
       <div className="active-listings-page">
+        {error && <p className="error-message">{error}</p>}
         <div className="listings-container">
           {loading ? (
             <p>Loading listings...</p>

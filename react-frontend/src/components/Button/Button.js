@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 import './Button.css'
 
 const Button = ({ type, children, onClick, variant }) => {
-  const buttonClass = variant === 'transparent' ? 'button transparent' : 'button'
+  const buttonClass = classNames('button', {
+    'transparent': variant === 'transparent'
+  })
 
   return (
     <button className={buttonClass} type={type} onClick={onClick}>

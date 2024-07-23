@@ -115,7 +115,11 @@ export const fetchUserWatchlist = async () => {
     const response = await axiosInstance.get('/watchlist')
     return response.data.listings
   } catch (error) {
-    console.error(error)
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // User is not authenticated, return an empty array
+      return []
+    }
+    console.error('Error fetching watchlist:', error)
     throw new Error('Failed to fetch watchlist')
   }
 }
@@ -125,7 +129,11 @@ export const fetchWatchlistIds = async () => {
     const response = await axiosInstance.get('/watchlist/ids')
     return response.data.listing_ids
   } catch (error) {
-    console.error(error)
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // User is not authenticated, return an empty array
+      return []
+    }
+    console.error('Error fetching watchlist IDs:', error)
     throw new Error('Failed to fetch watchlist IDs')
   }
 }

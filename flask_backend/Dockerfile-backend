@@ -16,9 +16,5 @@ COPY . .
 # Expose the port that the app runs on
 EXPOSE 5000
 
-# Set environment variables
-ENV FLASK_APP=starter.py
-ENV FLASK_ENV=production
-
 # Run the application
 CMD ["flask", "run", "--host=0.0.0.0"]
