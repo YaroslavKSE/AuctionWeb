@@ -53,7 +53,7 @@ const UserBidsPage = () => {
   return (
     <Layout>
       <div className="user-bids-page">
-        <h1>Your Bids</h1>
+        <h1 className="bids-title">Your Bids</h1>
         {bids.length === 0 ? (
           <div className="no-bids">You haven't placed any bids yet.</div>
         ) : (

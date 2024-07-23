@@ -55,6 +55,7 @@ def get_watchlist_route():
                 "images": listing.get('images', []),
                 "categories": listing.get('categories', []),
                 "current_bid": listing.get('current_bid', None),
+                "currency": listing.get('currency', None),
                 "current_bidder_id": listing.get('current_bidder_id', None),
                 "owner_id": listing['owner_id'],
                 "status": listing.get('status', 'active'),

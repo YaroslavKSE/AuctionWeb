@@ -24,10 +24,8 @@ const Listing = ({
   const { isAuthenticated } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setIsInWatchlist(false)
-    }
-  }, [isAuthenticated])
+    setIsInWatchlist(initialIsInWatchlist)
+  }, [initialIsInWatchlist])
 
   const handleNextImage = () => {
     setCurrentImageIndex((currentImageIndex + 1) % images.length)
@@ -82,11 +80,10 @@ const Listing = ({
 Listing.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
   currency: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
-  seller: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   listingId: PropTypes.string.isRequired,
   initialIsInWatchlist: PropTypes.bool.isRequired
 }

@@ -47,7 +47,7 @@ const UserListingsPage = () => {
   return (
     <Layout>
       <div className="user-listings-page">
-        <h1>Your Listings</h1>
+        <h1 className="bids-title">Your Listings</h1>
         <div className="listings-container">
           {listings.length === 0 ? (
             <p>You have no listings.</p>

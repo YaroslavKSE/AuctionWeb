@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import './Button.css'
 
-const Button = ({ type, children, onClick, variant }) => {
+const Button = ({ type, children, onClick, variant = 'default' }) => {
   const buttonClass = classNames('button', {
     'transparent': variant === 'transparent'
   })
@@ -20,10 +20,6 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['default', 'transparent'])
-}
-
-Button.defaultProps = {
-  variant: 'default'
 }
 
 export default Button

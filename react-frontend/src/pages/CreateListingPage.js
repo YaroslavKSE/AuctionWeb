@@ -129,12 +129,6 @@ const CreateListingPage = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <SelectInput
-            label="Currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            options={currencyOptions}
-          />
           <ImageInput label="Add Images Here" images={images} setImages={setImages} />
           <TextAreaInput
             label="Add Description"
@@ -145,6 +139,12 @@ const CreateListingPage = () => {
             label="Set the Starting Bid"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+          />
+          <SelectInput
+            label="Currency"
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+            options={currencyOptions}
           />
           <Button type="submit">Create Listing</Button>
         </form>
