@@ -25,6 +25,7 @@ const CreateListingPage = () => {
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showAuthAlert, setShowAuthAlert] = useState(false)
+  const [validationErrors, setValidationErrors] = useState({})
   const [showValidationAlert, setShowValidationAlert] = useState(false)
 
   const currencyOptions = [
@@ -44,13 +45,16 @@ const CreateListingPage = () => {
   }, [isAuthenticated, navigate])
 
   const validateForm = () => {
-    return (
-      title.trim() !== '' &&
-      currency !== '' &&
-      description.trim() !== '' &&
-      price.trim() !== '' &&
-      images.length > 0
-    )
+    const errors = {}
+    if (title.trim() === '') errors.title = 'Title is required'
+    if (currency === '') errors.currency = 'Currency is required'
+    if (description.trim() === '') errors.description = 'Description is required'
+    if (price.trim() === '') errors.price = 'Starting bid is required'
+    if (isNaN(Number(price)) || Number(price) <= 0) errors.price = 'Starting bid must be a positive number'
+    if (images.length === 0) errors.images = 'At least one image is required'
+
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = (e) => {
@@ -59,12 +63,12 @@ const CreateListingPage = () => {
       setShowAuthAlert(true)
       return
     }
-    if (!validateForm()) {
+    if (validateForm()) {
+      setIsPopupOpen(true)
+    } else {
       setShowValidationAlert(true)
       setTimeout(() => setShowValidationAlert(false), 3000)
-      return
     }
-    setIsPopupOpen(true)
   }
 
   const handleConfirm = async () => {
@@ -84,6 +88,7 @@ const CreateListingPage = () => {
       setImages([])
       setDescription('')
       setPrice('')
+      setValidationErrors({})
     } catch (error) {
       console.log(error)
       setErrorMessage(error.error || 'Failed to create listing')
@@ -117,7 +122,7 @@ const CreateListingPage = () => {
       <div className="create-listing-page">
         {showValidationAlert && (
           <Alert
-            message="Please fill in all fields, select a currency, and add at least one image."
+            message="Please fill in all the required fields in the form."
             type="error"
           />
         )}
@@ -128,23 +133,32 @@ const CreateListingPage = () => {
             placeholder="Enter the title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            error={validationErrors.title}
           />
-          <ImageInput label="Add Images Here" images={images} setImages={setImages} />
+          <ImageInput
+            label="Add Images Here"
+            images={images}
+            setImages={setImages}
+            error={validationErrors.images}
+          />
           <TextAreaInput
             label="Add Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            error={validationErrors.description}
           />
           <NumberInput
             label="Set the Starting Bid"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            error={validationErrors.price}
           />
           <SelectInput
             label="Currency"
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
             options={currencyOptions}
+            error={validationErrors.currency}
           />
           <Button type="submit">Create Listing</Button>
         </form>

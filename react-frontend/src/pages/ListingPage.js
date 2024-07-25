@@ -30,6 +30,8 @@ const ListingPage = () => {
   const [showAlert, setShowAlert] = useState(false)
   const [watchlist, setWatchlist] = useState([])
   const [isInWatchlist, setIsInWatchlist] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
     const fetchListingAndBids = async () => {
@@ -38,8 +40,12 @@ const ListingPage = () => {
         setListing(listingData)
         const bidsData = await getBidsByListingId(listingId)
         setBids(bidsData)
+        setFetchError(null)
       } catch (error) {
         console.error('Error fetching listing or bids:', error)
+        setFetchError('Failed to load listing details. Please try again later.')
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -47,10 +53,10 @@ const ListingPage = () => {
       if (isAuthenticated) {
         try {
           const data = await fetchWatchlistIds()
-          // console.log('Fetched watchlist:', data)
           setWatchlist(data)
         } catch (error) {
           console.error('Error fetching watchlist IDs:', error)
+          // Consider if you want to set a separate error state for watchlist fetch
         }
       } else {
         setWatchlist([])
@@ -64,7 +70,6 @@ const ListingPage = () => {
   useEffect(() => {
     if (watchlist.length > 0 && listingId) {
       const listingInWatchlist = watchlist.includes(listingId)
-      //console.log('Is listing in watchlist:', listingInWatchlist)
       setIsInWatchlist(listingInWatchlist)
     }
   }, [watchlist, listingId])
@@ -112,9 +117,9 @@ const ListingPage = () => {
     setErrorMessage('')
   }
 
-  if (!listing) return <Layout>
-    <div>Loading...</div>
-  </Layout>
+  if (loading) return <Layout><div>Loading...</div></Layout>
+  if (fetchError) return <Layout><Alert message={fetchError} type="error" /></Layout>
+  if (!listing) return <Layout><div>Listing not found.</div></Layout>
 
   const isOwner = user && user.id === listing.owner_id
   const isWinner = listing.status === 'closed' && user && user.id === listing.current_bidder_id

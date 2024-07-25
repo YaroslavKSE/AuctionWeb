@@ -5,10 +5,12 @@ import { fetchUserWatchlist } from '../api'
 import Layout from '../components/Layout/Layout'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import Alert from '../components/Alert/Alert'
 
 const WatchlistPage = () => {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
 
@@ -17,15 +19,17 @@ const WatchlistPage = () => {
       try {
         const data = await fetchUserWatchlist()
         setListings(data)
+        setError(null)
       } catch (error) {
         console.error('Error fetching watchlist:', error)
+        setError('Failed to fetch watchlist. Please try again later.')
       } finally {
         setLoading(false)
       }
     }
 
     if (isAuthenticated) {
-      fetchWatchlist().catch((error) => console.error('Unhandled error in fetchWatchlist:', error))
+      fetchWatchlist()
     } else {
       setLoading(false)
     }
@@ -35,6 +39,7 @@ const WatchlistPage = () => {
     <Layout>
       <div className="watchlist-page">
         <h1 className="watchlist-title">Your Watchlist</h1>
+        {error && <Alert message={error} type="error" />}
         <div className="listings-container">
           {loading ? (
             <p>Loading watchlist...</p>
@@ -48,12 +53,12 @@ const WatchlistPage = () => {
                 title={listing.title}
                 description={listing.description}
                 createdAt={listing.created_at}
-                price={(listing.current_bid || listing.starting_bid)}
+                price={listing.current_bid || listing.starting_bid}
                 currency={listing.currency}
                 seller={'Seller Icon'}
                 onClick={() => navigate(`/listing/${listing.id}`)}
                 listingId={listing.id}
-                initialIsInWatchlist={true} // Items in watchlist will be marked as true initially
+                initialIsInWatchlist={true}
               />
             ))
           )}
