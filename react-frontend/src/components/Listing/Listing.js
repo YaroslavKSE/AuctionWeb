@@ -55,16 +55,25 @@ const Listing = ({
       setTimeout(() => setAlertMessage(null), 2000)
     }
   }
+  const handleNextImageClick = (e) => {
+    e.stopPropagation(); // Prevent event from bubbling up
+    handleNextImage();
+  };
+
+  const handleWatchlistToggleClick = (e) => {
+    e.stopPropagation(); // Prevent event from bubbling up
+    handleWatchlistToggle();
+  };
 
   return (
-    <div className="listing">
+    <div className="listing" onClick={onClick}>
       <div className="listing__image-container">
         <img src={images[currentImageIndex]} alt={title} className="listing__image" />
-        <button className="next-image-button" onClick={handleNextImage}>
+        <button className="next-image-button" onClick={handleNextImageClick}>
           <img src={nextIcon} alt="Next" className="next-icon" />
         </button>
       </div>
-      <div className="listing__details" onClick={onClick}>
+      <div className="listing__details">
         <div className="listing__title">{title}</div>
         <div className="listing__price">
           {price} {currency}
@@ -72,14 +81,14 @@ const Listing = ({
         <div className="listing__created-at">{createdAt}</div>
       </div>
       {showWatchlistIcon && (
-        <div className="listing__watchlist" onClick={handleWatchlistToggle}>
+        <div className="listing__watchlist" onClick={handleWatchlistToggleClick}>
           <img src={isInWatchlist ? heartFull : heartTransparent} alt="Watchlist" />
         </div>
       )}
       {alertMessage && <Alert message={alertMessage} />}
     </div>
-  )
-}
+  );
+};
 
 Listing.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
