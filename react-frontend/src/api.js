@@ -66,7 +66,7 @@ export const getListings = async () => {
     const response = await axiosInstance.get('/listings')
     return response.data
   } catch (error) {
-    throw new Error(error.response.data.error || 'Login failed')
+    throw new Error(error.response?.data || error.message || 'Failed to get listings')
   }
 }
 
@@ -120,7 +120,6 @@ export const fetchUserWatchlist = async () => {
       // User is not authenticated, return an empty array
       return []
     }
-    console.error('Error fetching watchlist:', error)
     throw new Error('Failed to fetch watchlist')
   }
 }
@@ -134,7 +133,6 @@ export const fetchWatchlistIds = async () => {
       // User is not authenticated, return an empty array
       return []
     }
-    console.error('Error fetching watchlist IDs:', error)
     throw new Error('Failed to fetch watchlist IDs')
   }
 }

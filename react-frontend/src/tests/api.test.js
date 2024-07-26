@@ -190,10 +190,10 @@ describe('API functions', () => {
   test('login_InvalidCredentials_ThrowsError', async () => {
     // Arrange
     const errorMessage = 'Invalid credentials';
-    axios.post.mockRejectedValue({ response: { data: errorMessage } });
+    axios.post.mockRejectedValue({ response: { data: { error: errorMessage } } });
 
     // Act & Assert
-    await expect(api.login('wrong@example.com', 'wrongpassword')).rejects.toThrow(Error(errorMessage));
+    await expect(api.login('wrong@example.com', 'wrongpassword')).rejects.toThrow(errorMessage);
   });
 
   test('logout_Unauthenticated_ThrowsError', async () => {
@@ -211,7 +211,7 @@ describe('API functions', () => {
     axios.get.mockRejectedValue({ response: { data: errorMessage } });
 
     // Act & Assert
-    await expect(api.getListings()).rejects.toThrow(Error(errorMessage));
+    await expect(api.getListings()).rejects.toThrow(errorMessage);
   });
 
   test('createListing_InvalidData_ThrowsError', async () => {
