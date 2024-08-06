@@ -1,14 +1,79 @@
+/* ActiveListingsPage.css */
+
 .active-listings-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background-color: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .listings-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  justify-content: center;
   max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Loading state */
+.active-listings-page p {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin-top: 40px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .active-listings-page {
+    padding: 15px;
+  }
+
+  .listings-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .listings-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Optional: Add a subtle background and improve overall page aesthetics */
+body {
+  background-color: #f5f5f5;
+}
+
+.active-listings-page {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add a title for the page */
+.active-listings-page h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Optional: Style for no listings available */
+.active-listings-page p:last-child {
+  font-style: italic;
+  color: #888;
+}
+
+/* Optional: Add smooth transitions for a more polished feel */
+.listings-container {
+  transition: all 0.3s ease;
+}
+
+/* Optional: Add hover effect to the entire page for interactivity */
+.active-listings-page:hover {
+  box-shadow: none;
 }

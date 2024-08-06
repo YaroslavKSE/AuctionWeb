@@ -1,14 +1,60 @@
 .create-listing-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
 
 .create-listing-form {
-  display: flex;
-  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-listing-form > * {
+  margin-bottom: 20px;
+  width: 100%; /* Ensure all direct children of the form take full width */
+}
+
+/* Style for all inputs, textareas, and selects */
+.create-listing-form input,
+.create-listing-form textarea,
+.create-listing-form select {
   width: 100%;
-  max-width: 600px;
-  gap: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Style for the button */
+.create-listing-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-listing-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Ensure the image input doesn't stretch its content */
+.create-listing-form .image-input input[type="file"] {
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .create-listing-page {
+    padding: 20px 10px;
+  }
+
+  .create-listing-form {
+    padding: 20px;
+  }
 }

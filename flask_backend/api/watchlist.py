@@ -54,6 +54,9 @@ def get_watchlist_route():
                 "starting_bid": listing['starting_bid'],
                 "images": listing.get('images', []),
                 "categories": listing.get('categories', []),
+                "current_bid": listing.get('current_bid', None),
+                "currency": listing.get('currency', None),
+                "current_bidder_id": listing.get('current_bidder_id', None),
                 "owner_id": listing['owner_id'],
                 "status": listing.get('status', 'active'),
                 "created_at": listing['created_at'],
@@ -61,3 +64,15 @@ def get_watchlist_route():
             })
 
     return jsonify({"listings": listings}), 200
+
+
+@watchlist.route('/ids', methods=['GET'])
+@login_required
+def get_watchlist_ids():
+    user_watchlist = get_user_watchlist(current_user.id)
+
+    if not user_watchlist:
+        return jsonify({"listing_ids": []}), 200
+
+    listing_ids = [str(listing_id) for listing_id in user_watchlist['listing_ids']]
+    return jsonify({"listing_ids": listing_ids}), 200

@@ -22,12 +22,11 @@ const RegisterForm = () => {
       setError('Passwords do not match')
       return
     }
-
     try {
       await register(email, password, name, surname)
       navigate('/login')
     } catch (err) {
-      setError(err.message)
+      setError(error.message || 'An unexpected error occurred')
     }
   }
 

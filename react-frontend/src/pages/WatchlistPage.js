@@ -1,52 +1,50 @@
 import React, { useState, useEffect, useContext } from 'react'
-import './styles/ActiveListingsPage.css'
+import './styles/WatchlistPage.css'
 import Listing from '../components/Listing/Listing'
-import { getListings, fetchWatchlistIds } from '../api'
-import { useNavigate } from 'react-router-dom'
+import { fetchUserWatchlist } from '../api'
 import Layout from '../components/Layout/Layout'
 import { AuthContext } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import Alert from '../components/Alert/Alert'
 
-const ActiveListingsPage = () => {
-  const { isAuthenticated } = useContext(AuthContext)
+const WatchlistPage = () => {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
-  const [watchlist, setWatchlist] = useState([])
   const [error, setError] = useState(null)
+  const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchWatchlist = async () => {
       try {
-        setLoading(true)
+        const data = await fetchUserWatchlist()
+        setListings(data)
         setError(null)
-
-        const listingsData = await getListings()
-        setListings(listingsData)
-
-        if (isAuthenticated) {
-          const watchlistData = await fetchWatchlistIds()
-          setWatchlist(watchlistData)
-        }
       } catch (error) {
-        console.error('Error fetching data:', error)
-        setError('Failed to load listings. Please try again later.')
+        console.error('Error fetching watchlist:', error)
+        setError('Failed to fetch watchlist. Please try again later.')
       } finally {
         setLoading(false)
       }
     }
 
-    fetchData()
+    if (isAuthenticated) {
+      fetchWatchlist()
+    } else {
+      setLoading(false)
+    }
   }, [isAuthenticated])
 
   return (
     <Layout>
-      <div className="active-listings-page">
-        {error && <p className="error-message">{error}</p>}
+      <div className="watchlist-page">
+        <h1 className="watchlist-title">Your Watchlist</h1>
+        {error && <Alert message={error} type="error" />}
         <div className="listings-container">
           {loading ? (
-            <p>Loading listings...</p>
+            <p>Loading watchlist...</p>
           ) : listings.length === 0 ? (
-            <p>No listings available.</p>
+            <p>No items in your watchlist.</p>
           ) : (
             listings.map((listing) => (
               <Listing
@@ -60,7 +58,7 @@ const ActiveListingsPage = () => {
                 seller={'Seller Icon'}
                 onClick={() => navigate(`/listing/${listing.id}`)}
                 listingId={listing.id}
-                initialIsInWatchlist={watchlist.includes(listing.id)}
+                initialIsInWatchlist={true}
               />
             ))
           )}
@@ -70,4 +68,4 @@ const ActiveListingsPage = () => {
   )
 }
 
-export default ActiveListingsPage
+export default WatchlistPage

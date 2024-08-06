@@ -50,7 +50,7 @@ const Header = () => {
       </div>
       <div className="header__side">
         <MenuIcon onClick={handleDropdownToggle} />
-        {isDropdownOpen && <Dropdown className="header__dropdown" />}
+        {isDropdownOpen && <Dropdown />}
       </div>
     </header>
   )

@@ -1,85 +1,113 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
-import Header from '../components/Header/Header'
-import Nav from '../components/Navigation/Nav'
+import Layout from '../components/Layout/Layout'
 import TextInput from '../components/TextInput/TextInput'
 import Button from '../components/Button/Button'
 import Popup from '../components/Popup/Popup'
 import Listing from '../components/Listing/Listing'
 import PreviousBids from '../components/PreviousBids/PreviousBids'
 import DetailedDescription from '../components/DetailedDescription/DetailedDescription'
-import { getListingById, placeBid, addToWatchlist, getBidsByListingId } from '../api'
+import Alert from '../components/Alert/Alert'
+import {
+  getListingById,
+  placeBid,
+  getBidsByListingId,
+  closeListing,
+  fetchWatchlistIds
+} from '../api'
 import './styles/ListingPage.css'
 
 const ListingPage = () => {
   const { listingId } = useParams()
-  const navigate = useNavigate()
-  const { isAuthenticated } = useContext(AuthContext)
+  const { isAuthenticated, user } = useContext(AuthContext)
   const [listing, setListing] = useState(null)
   const [bidAmount, setBidAmount] = useState('')
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [bids, setBids] = useState([])
+  const [showAlert, setShowAlert] = useState(false)
+  const [watchlist, setWatchlist] = useState([])
+  const [isInWatchlist, setIsInWatchlist] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchListingAndBids = async () => {
       try {
-        const data = await getListingById(listingId)
-        setListing(data)
+        const listingData = await getListingById(listingId)
+        setListing(listingData)
+        const bidsData = await getBidsByListingId(listingId)
+        setBids(bidsData)
+        setFetchError(null)
       } catch (error) {
-        console.error('Error fetching listing:', error)
+        console.error('Error fetching listing or bids:', error)
+        setFetchError('Failed to load listing details. Please try again later.')
+      } finally {
+        setLoading(false)
       }
     }
 
-    const fetchBids = async () => {
-      try {
-        const data = await getBidsByListingId(listingId)
-        setBids(data)
-      } catch (error) {
-        console.error('Error fetching bids:', error)
+    const fetchUserWatchlist = async () => {
+      if (isAuthenticated) {
+        try {
+          const data = await fetchWatchlistIds()
+          setWatchlist(data)
+        } catch (error) {
+          console.error('Error fetching watchlist IDs:', error)
+          // Consider if you want to set a separate error state for watchlist fetch
+        }
+      } else {
+        setWatchlist([])
       }
     }
 
-    fetchListing()
-    fetchBids()
-  }, [listingId])
+    fetchListingAndBids()
+    fetchUserWatchlist()
+  }, [listingId, isAuthenticated])
+
+  useEffect(() => {
+    if (watchlist.length > 0 && listingId) {
+      const listingInWatchlist = watchlist.includes(listingId)
+      setIsInWatchlist(listingInWatchlist)
+    }
+  }, [watchlist, listingId])
 
   const handleBidSubmit = async () => {
     if (!isAuthenticated) {
-      alert('Please log in to place a bid.')
-      navigate('/login') // Use navigate instead of history.push
+      setShowAlert(true)
+      setTimeout(() => setShowAlert(false), 3000)
       return
     }
 
     try {
-      console.log('Submitting bid:', bidAmount)
       await placeBid(listingId, bidAmount)
       setIsSuccess(true)
       setBidAmount('')
+      // Refresh listing and bids after successful bid
+      const updatedListing = await getListingById(listingId)
+      setListing(updatedListing)
       const updatedBids = await getBidsByListingId(listingId)
       setBids(updatedBids)
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Failed to place bid')
+      setErrorMessage(error.message)
       setIsSuccess(false)
     } finally {
       setIsPopupOpen(false)
     }
   }
 
-  const handleWatchlist = async () => {
-    if (!isAuthenticated) {
-      alert('Please log in to add to watchlist.')
-      navigate('/login') // Use navigate instead of history.push
-      return
-    }
-
+  const handleCloseListing = async () => {
     try {
-      await addToWatchlist(listingId)
-      alert('Listing added to watchlist')
+      await closeListing(listingId)
+      setIsSuccess(true)
+      // Refresh listing after closing
+      const updatedListing = await getListingById(listingId)
+      setListing(updatedListing)
     } catch (error) {
-      console.error('Error adding to watchlist:', error)
+      setErrorMessage(error.message)
+      setIsSuccess(false)
     }
   }
 
@@ -89,74 +117,108 @@ const ListingPage = () => {
     setErrorMessage('')
   }
 
-  if (!listing) return <div>Loading...</div>
+  if (loading) return <Layout><div>Loading...</div></Layout>
+  if (fetchError) return <Layout><Alert message={fetchError} type="error" /></Layout>
+  if (!listing) return <Layout><div>Listing not found.</div></Layout>
+
+  const isOwner = user && user.id === listing.owner_id
+  const isWinner = listing.status === 'closed' && user && user.id === listing.current_bidder_id
 
   return (
-    <div className="listing-page">
-      <Header />
-      <Nav />
-      <div className="listing-title">{listing.title}</div>
-      <div className="listing-content">
-        <div className="listing-container">
-          <Listing
-            title={listing.title}
-            images={listing.images}
-            price={listing.current_bid || listing.starting_bid + ' USD'}
-            created_at={listing.created_at}
-            owner_id={listing.owner_id}
-            onWatchlistClick={handleWatchlist}
+    <Layout>
+      <div className="listing-page">
+        {showAlert && <Alert message="You must be logged in to perform this action." type="warning" />}
+        <div className="listing-content">
+          <h1 className="listing-title">{listing.title}</h1>
+          <div className="listing-container">
+            <div className="listing-details">
+              <Listing
+                key={listing.id}
+                images={listing.images}
+                title={listing.title}
+                description={listing.description}
+                createdAt={listing.created_at}
+                price={listing.current_bid || listing.starting_bid}
+                currency={listing.currency}
+                seller={'Seller Icon'}
+                listingId={listing.id}
+                initialIsInWatchlist={isInWatchlist}
+              />
+            </div>
+          </div>
+          <div className="bid-section">
+            {listing.status === 'active' && !isOwner && (
+              <>
+                <TextInput
+                  label="Enter new Bid"
+                  type="number"
+                  placeholder="Enter your bid"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(e.target.value)}
+                />
+                <Button
+                  onClick={() => (isAuthenticated ? setIsPopupOpen(true) : handleBidSubmit())}
+                  className="button"
+                  type="submit"
+                >
+                  Place bid
+                </Button>
+              </>
+            )}
+            {isOwner && listing.status === 'active' && (
+              <Button onClick={handleCloseListing} className="button" type="button">
+                Close Listing
+              </Button>
+            )}
+            {listing.status === 'closed' && (
+              <div className="listing-closed-message">
+                This listing is closed. The winning bid was {listing.current_bid || listing.starting_bid} {listing.currency}.
+              </div>
+            )}
+            {isWinner && (
+              <div className="listing-winner-message">Congratulations! You won this auction.</div>
+            )}
+          </div>
+          <div className="current-bid-section">
+            <h2>Current Bid</h2>
+            <p className="current-bid">
+              {listing.current_bid || listing.starting_bid} {listing.currency}
+            </p>
+          </div>
+          <div className="detailed-description-div">
+            <DetailedDescription description={listing.description} />
+          </div>
+          <div className="previous-bids-div">
+            <PreviousBids bids={bids} />
+          </div>
+        </div>
+        {isPopupOpen && (
+          <Popup
+            title="Confirm Bid"
+            message="Are you sure you want to place this bid?"
+            onConfirm={handleBidSubmit}
+            onClose={handleClosePopup}
+            errorMessage={errorMessage}
           />
-        </div>
-        <div className="detailed-description">
-          <DetailedDescription description={listing.description} />
-        </div>
-        <div className="bid-section">
-          <TextInput
-            label="Enter new Bid"
-            type="number"
-            placeholder="Enter your bid"
-            value={bidAmount}
-            onChange={(e) => setBidAmount(e.target.value)}
+        )}
+        {isSuccess && (
+          <Popup
+            title="Success"
+            message={isOwner ? 'Your listing has been closed.' : 'Your bid has been placed successfully!'}
+            onConfirm={handleClosePopup}
+            onClose={handleClosePopup}
           />
-          <Button
-            onClick={() => {
-              console.log('Button clicked')
-              setIsPopupOpen(true)
-            }}
-            class="button"
-            type="submit">
-            Place bid
-          </Button>
-        </div>
-        <div className="previous-bids">
-          <PreviousBids bids={bids} />
-        </div>
+        )}
+        {errorMessage && !isPopupOpen && (
+          <Popup
+            title="Error"
+            message={errorMessage}
+            onConfirm={handleClosePopup}
+            onClose={handleClosePopup}
+          />
+        )}
       </div>
-      {isPopupOpen && (
-        <Popup
-          title="Confirm Bid"
-          message="Are you sure you want to place this bid?"
-          onConfirm={handleBidSubmit}
-          onClose={handleClosePopup}
-        />
-      )}
-      {isSuccess && (
-        <Popup
-          title="Success"
-          message="Your bid has been placed successfully!"
-          onConfirm={handleClosePopup}
-          onClose={handleClosePopup}
-        />
-      )}
-      {errorMessage && (
-        <Popup
-          title="Error"
-          message={errorMessage}
-          onConfirm={handleClosePopup}
-          onClose={handleClosePopup}
-        />
-      )}
-    </div>
+    </Layout>
   )
 }
 
